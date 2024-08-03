@@ -1,6 +1,6 @@
 ﻿namespace CarAuction.Domain.Entities;
 
-public class AuctionBid
+public class Bid
 {
     public Guid Id { get; set; }
     public required decimal Bid { get; set; }

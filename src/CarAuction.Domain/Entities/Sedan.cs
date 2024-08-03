@@ -1,6 +1,8 @@
-﻿namespace CarAuction.Domain.Entities;
+﻿using CarAuction.Domain.Interfaces;
 
-public class Sedan : Car
+namespace CarAuction.Domain.Entities;
+
+public class Sedan : Vehicle, ICar
 {
-    public required int NumberOfDoors { get; set; }
+    public int NumberOfDoors { get; set; }
 }

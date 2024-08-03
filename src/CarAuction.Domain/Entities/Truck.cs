@@ -1,6 +1,8 @@
-﻿namespace CarAuction.Domain.Entities;
+﻿using CarAuction.Domain.Interfaces;
 
-public class Truck : Car
+namespace CarAuction.Domain.Entities;
+
+public class Truck : Vehicle, ITruck
 {
-    public required decimal LoadCapacity { get; set; }
+    public decimal LoadCapacity { get; set; }
 }

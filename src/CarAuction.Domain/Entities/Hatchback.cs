@@ -1,6 +1,8 @@
-﻿namespace CarAuction.Domain.Entities;
+﻿using CarAuction.Domain.Interfaces;
 
-public class HatchBack : Car
+namespace CarAuction.Domain.Entities;
+
+public class HatchBack : Vehicle, ICar
 {
-    public required int NumberOfDoors { get; set; }
+    public int NumberOfDoors { get; set; }
 }

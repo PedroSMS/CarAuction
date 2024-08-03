@@ -1,6 +1,8 @@
-﻿namespace CarAuction.Domain.Entities;
+﻿using CarAuction.Domain.Interfaces;
 
-public class Suv: Car
+namespace CarAuction.Domain.Entities;
+
+public class Suv: Vehicle, ISuv
 {
-    public required int NumberOfSeats { get; set; }
+    public int NumberOfSeats { get; set; }
 }

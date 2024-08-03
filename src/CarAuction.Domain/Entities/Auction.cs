@@ -6,8 +6,8 @@
         public DateTime? FinishedAtUtc { get; set; }
 
         public Guid CarId { get; set; }
-        public required Car Car { get; set; }
+        public Vehicle? Car { get; set; }
 
-        public required ICollection<AuctionBid> Bids { get; set; } = [];
+        public ICollection<Bid> Bids { get; set; } = [];
     }
 }
