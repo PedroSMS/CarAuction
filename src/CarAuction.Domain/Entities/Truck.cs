@@ -4,5 +4,5 @@ namespace CarAuction.Domain.Entities;
 
 public class Truck : Vehicle, ITruck
 {
-    public decimal LoadCapacity { get; set; }
+    public int LoadCapacity { get; set; }
 }

@@ -2,5 +2,5 @@
 
 public interface ITruck
 {
-    decimal LoadCapacity { get; set; }
+    int LoadCapacity { get; set; }
 }
