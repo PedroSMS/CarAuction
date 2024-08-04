@@ -1,5 +1,4 @@
-﻿using CarAuction.Application.Commands.AddCar;
-using CarAuction.Application.Common.Interfaces;
+﻿using CarAuction.Application.Common.Interfaces;
 using CarAuction.Domain.Enums;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +18,7 @@ public class CreateCarCommandValidator : AbstractValidator<CreateCarCommand>
             .NotEmpty();
         RuleFor(r => r.Identifier)
             .NotEmpty()
-            .MustAsync(async (r, ct) => await CheckIfIdentifierDoesNotExistsInDatabase(db, r, ct))
+            .MustAsync(async (i, ct) => await CheckIfIdentifierDoesNotExistsInDatabase(db, i, ct))
             .WithMessage("Identifier already exists in the database.");
         RuleFor(r => r.StartingBid)
             .NotEmpty();
@@ -34,7 +33,7 @@ public class CreateCarCommandValidator : AbstractValidator<CreateCarCommand>
             .When(r => r.TypeId == ECarType.Truck);
     }
 
-    private async Task<bool> CheckIfIdentifierDoesNotExistsInDatabase(
+    private static async Task<bool> CheckIfIdentifierDoesNotExistsInDatabase(
         ICarAuctionContext db, string identifier, CancellationToken cancellationToken)
     {
         return await db.Vehicle.AnyAsync(e => e.Identifier == identifier, cancellationToken) is false;

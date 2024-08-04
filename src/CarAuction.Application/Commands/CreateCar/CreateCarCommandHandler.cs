@@ -4,7 +4,7 @@ using CarAuction.Domain.Enums;
 using FluentValidation;
 using MediatR;
 
-namespace CarAuction.Application.Commands.AddCar;
+namespace CarAuction.Application.Commands.CreateCar;
 
 public class CreateCarCommandHandler(
     ICarAuctionContext db, 

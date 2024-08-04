@@ -1,7 +1,7 @@
 ﻿using CarAuction.Domain.Enums;
 using MediatR;
 
-namespace CarAuction.Application.Commands.AddCar;
+namespace CarAuction.Application.Commands.CreateCar;
 
 public class CreateCarCommand(CreateCarCommandRequest request) : IRequest<Guid>
 {

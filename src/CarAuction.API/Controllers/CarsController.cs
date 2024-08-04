@@ -1,4 +1,4 @@
-﻿using CarAuction.Application.Commands.AddCar;
+﻿using CarAuction.Application.Commands.CreateCar;
 using CarAuction.Application.Queries.GetCarById;
 using CarAuction.Application.Queries.GetCars;
 using MediatR;
