@@ -1,15 +1,15 @@
 ﻿using CarAuction.Application.Common.Interfaces;
 using CarAuction.Domain.Entities;
-using CarAuction.Domain.Enum;
+using CarAuction.Domain.Enums;
 using MediatR;
 
 namespace CarAuction.Application.Commands.AddCar;
 
-public class CreateCarCommandHandler(IDatabase database) : IRequestHandler<CreateCarCommand, Guid>
+public class CreateCarCommandHandler(ICarAuctionContext db) : IRequestHandler<CreateCarCommand, Guid>
 {
-    private readonly IDatabase _database = database;
+    private readonly ICarAuctionContext _db = db;
 
-    public Task<Guid> Handle(CreateCarCommand request, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(CreateCarCommand request, CancellationToken cancellationToken)
     {
         var car = GetCar(request);
 
@@ -18,23 +18,23 @@ public class CreateCarCommandHandler(IDatabase database) : IRequestHandler<Creat
             // TODO
         }
 
-        _database.Cars.Add(car);
+        _db.Vehicle.Add(car);
+        await _db.SaveChangesAsync(cancellationToken);
 
-        return Task.FromResult(car?.Id ?? Guid.Empty);
+        return car.Id;
     }
 
-    private Vehicle? GetCar(CreateCarCommand request)
+    private Vehicle GetCar(CreateCarCommand request)
     {
         return request.TypeId switch
         {
-            ECarType.Hatchback => new HatchBack
+            ECarType.Hatchback => new Hatchback
             {
                 Identifier = request.Identifier,
                 Manufacturer = request.Manufacturer,
                 NumberOfDoors = request.NumberOfDoors.Value,
                 StartingBid = request.StartingBid,
                 Year = request.Year,
-                OwnerId = Guid.NewGuid() // TODO
             },
             ECarType.Sedan => new Sedan
             {
@@ -43,7 +43,6 @@ public class CreateCarCommandHandler(IDatabase database) : IRequestHandler<Creat
                 NumberOfDoors = request.NumberOfDoors.Value,
                 StartingBid = request.StartingBid,
                 Year = request.Year,
-                OwnerId = Guid.NewGuid() // TODO
             },
             ECarType.Suv => new Suv
             {
@@ -52,7 +51,6 @@ public class CreateCarCommandHandler(IDatabase database) : IRequestHandler<Creat
                 NumberOfSeats = request.NumberOfSeats.Value,
                 StartingBid = request.StartingBid,
                 Year = request.Year,
-                OwnerId = Guid.NewGuid() // TODO
             },
             ECarType.Truck => new Truck
             {
@@ -61,7 +59,6 @@ public class CreateCarCommandHandler(IDatabase database) : IRequestHandler<Creat
                 LoadCapacity = request.LoadCapacity.Value,
                 StartingBid = request.StartingBid,
                 Year = request.Year,
-                OwnerId = Guid.NewGuid() // TODO
             },
             _ => throw new Exception(nameof(CreateCarCommand))
         };

@@ -1,4 +1,4 @@
-﻿using CarAuction.Domain.Enum;
+﻿using CarAuction.Domain.Enums;
 using MediatR;
 
 namespace CarAuction.Application.Commands.AddCar;

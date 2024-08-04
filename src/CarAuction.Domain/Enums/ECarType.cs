@@ -1,4 +1,4 @@
-﻿namespace CarAuction.Domain.Enum;
+﻿namespace CarAuction.Domain.Enums;
 
 public enum ECarType
 {

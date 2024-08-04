@@ -1,5 +1,6 @@
 ﻿using CarAuction.Application.Commands.AddCar;
 using CarAuction.Application.Queries.GetCarById;
+using CarAuction.Application.Queries.GetCars;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,15 @@ namespace CarAuction.API.Controllers
         {
             var result = await mediator.Send(new GetCarByIdQuery(id));
             
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Get(
+            [FromServices] IMediator mediator)
+        {
+            var result = await mediator.Send(new GetCarsQuery());
+
             return Ok(result);
         }
 

@@ -9,7 +9,4 @@ public abstract class Vehicle : IBiddable
     public required string Manufacturer { get; set; }
     public int Year { get; set; }
     public decimal StartingBid { get; set; }
-    
-    public Guid OwnerId { get; set; }
-    public User? Owner { get; set; }
 }

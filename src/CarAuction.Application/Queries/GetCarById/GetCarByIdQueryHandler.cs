@@ -3,17 +3,17 @@ using MediatR;
 
 namespace CarAuction.Application.Queries.GetCarById;
 
-public class GetCarByIdQueryHandler(IDatabase database) : IRequestHandler<GetCarByIdQuery, GetCarByIdQueryResponse?>
+public class GetCarByIdQueryHandler(ICarAuctionContext db) : IRequestHandler<GetCarByIdQuery, GetCarByIdQueryResponse?>
 {
-    private readonly IDatabase _database = database;
+    private readonly ICarAuctionContext _db = db;
 
     public Task<GetCarByIdQueryResponse?> Handle(GetCarByIdQuery request, CancellationToken cancellationToken)
     {
-        var car = _database.Cars
+        var car = _db.Vehicle
             .Select(GetCarByIdQueryResponse.Projection)
             .SingleOrDefault(e => e.Id == request.Id);
 
-        if(car == null) 
+        if (car == null) 
         {
             // TODO
         }

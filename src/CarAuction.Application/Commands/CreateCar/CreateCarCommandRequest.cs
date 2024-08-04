@@ -1,6 +1,4 @@
-﻿using CarAuction.Domain.Enum;
-
-namespace CarAuction.Application.Commands.AddCar;
+﻿namespace CarAuction.Application.Commands.AddCar;
 
 public class CreateCarCommandRequest
 {

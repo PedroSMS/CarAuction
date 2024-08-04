@@ -1,24 +1,25 @@
-﻿using CarAuction.Domain.Entities;
+﻿using CarAuction.Application.Queries.GetCarById;
+using CarAuction.Domain.Entities;
 using CarAuction.Domain.Enums;
 using System.Linq.Expressions;
 
-namespace CarAuction.Application.Queries.GetCarById;
+namespace CarAuction.Application.Queries.GetCars;
 
-public class GetCarByIdQueryResponse
+public class GetCarsQueryResponse
 {
     public Guid Id { get; init; }
     public int? TypeId { get; init; }
     public string? Type { get; init; }
-    public required string Identifier { get; init; }
-    public required string Manufacturer { get; init; }
+    public string Identifier { get; init; }
+    public string Manufacturer { get; init; }
     public int Year { get; init; }
     public decimal StartingBid { get; init; }
     public int? NumberOfDoors { get; init; }
     public int? NumberOfSeats { get; init; }
     public int? LoadCapacity { get; init; }
 
-    public static Expression<Func<Vehicle, GetCarByIdQueryResponse>> Projection => 
-        vehicle  => new GetCarByIdQueryResponse
+    public static Expression<Func<Vehicle, GetCarsQueryResponse>> Projection =>
+        vehicle => new GetCarsQueryResponse
         {
             Id = vehicle.Id,
             Identifier = vehicle.Identifier,
