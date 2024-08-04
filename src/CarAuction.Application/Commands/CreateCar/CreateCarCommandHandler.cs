@@ -1,22 +1,28 @@
 ﻿using CarAuction.Application.Common.Interfaces;
 using CarAuction.Domain.Entities;
 using CarAuction.Domain.Enums;
+using FluentValidation;
 using MediatR;
 
 namespace CarAuction.Application.Commands.AddCar;
 
-public class CreateCarCommandHandler(ICarAuctionContext db) : IRequestHandler<CreateCarCommand, Guid>
+public class CreateCarCommandHandler(
+    ICarAuctionContext db, 
+    IValidator<CreateCarCommand> validator) : IRequestHandler<CreateCarCommand, Guid>
 {
     private readonly ICarAuctionContext _db = db;
+    private readonly IValidator<CreateCarCommand> _validator = validator;
 
     public async Task<Guid> Handle(CreateCarCommand request, CancellationToken cancellationToken)
     {
-        var car = GetCar(request);
+        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
-        if (car is null)
+        if (validationResult.IsValid is false)
         {
-            // TODO
+            throw new ValidationException(validationResult.Errors);
         }
+
+        var car = GetCar(request);
 
         _db.Vehicle.Add(car);
         await _db.SaveChangesAsync(cancellationToken);
