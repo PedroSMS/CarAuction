@@ -23,12 +23,15 @@ public class CreateCarCommandValidator : AbstractValidator<CreateCarCommand>
         RuleFor(r => r.StartingBid)
             .NotEmpty();
         RuleFor(r => r.NumberOfDoors)
+            .NotEmpty()
             .GreaterThan(0)
             .When(r => r.TypeId == ECarType.Hatchback || r.TypeId == ECarType.Sedan);
         RuleFor(r => r.NumberOfSeats)
+            .NotEmpty()
             .GreaterThan(0)
             .When(r => r.TypeId == ECarType.Suv);
         RuleFor(r => r.LoadCapacity)
+            .NotEmpty()
             .GreaterThan(0)
             .When(r => r.TypeId == ECarType.Truck);
     }

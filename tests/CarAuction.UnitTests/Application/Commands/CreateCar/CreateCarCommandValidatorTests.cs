@@ -10,16 +10,16 @@ namespace CarAuction.UnitTests.Application.Commands.CreateCar;
 
 public class CreateCarCommandValidatorTests
 {
-    private CreateCarCommandValidator _sut;
+    private CreateCarCommandValidator? _sut;
     private Mock<ICarAuctionContext> _mockDb = new Mock<ICarAuctionContext>();
 
     [Fact]
-    public async Task ValidateAsync_ShouldReturnIvalidadeResult_WhenIdentifierAlreadyExistsInDatabaseAsync()
+    public async Task ValidateAsync_ShouldReturnInvalidResult_WhenIdentifierAlreadyExistsInDatabase()
     {
         // Arrange
         const string identifier = "SameIdentifier!";
         UpdateMockDb(identifier);
-        var command = GetCommand(identifier);
+        var command = GetCommandForIdentifierValidationError(identifier);
         _sut = new CreateCarCommandValidator(_mockDb.Object);
 
         // Act
@@ -29,15 +29,66 @@ public class CreateCarCommandValidatorTests
         result.IsValid.Should().BeFalse();
     }
 
-    private void UpdateMockDb(string identifier)
+    [Fact]
+    public async Task ValidateAsync_ShouldReturnInvalidResult_WhenYearIsLessThan1885AndStartBidIs0()
     {
-        var data = new Vehicle[] { new Sedan { Identifier = identifier, Manufacturer = "Toyota" } };
+        // Arrange
+        UpdateMockDb();
+        var command = GetCommandForYearAndStartBidValidationErrors();
+        _sut = new CreateCarCommandValidator(_mockDb.Object);
+
+        // Act
+        var result = await _sut.ValidateAsync(command);
+
+        // Assert
+        result.IsValid.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task ValidateAsync_ShouldReturnInvalidResult_WhenTypeIsTruckAndDontHaveLoadCapacityPropertySet()
+    {
+        // Arrange
+        UpdateMockDb();
+        var command = GetCommandForTruckValidationError();
+        _sut = new CreateCarCommandValidator(_mockDb.Object);
+
+        // Act
+        var result = await _sut.ValidateAsync(command);
+
+        // Assert
+        result.IsValid.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task ValidateAsync_ShouldReturnValidResult_WhenHaveAllSuvPropertiesRequiredSet()
+    {
+        // Arrange
+        UpdateMockDb();
+        var command = GetCommandForValidResult();
+        _sut = new CreateCarCommandValidator(_mockDb.Object);
+
+        // Act
+        var result = await _sut.ValidateAsync(command);
+
+        // Assert
+        result.IsValid.Should().BeTrue();
+    }
+
+    #region private
+    private void UpdateMockDb(string? identifier = null)
+    {
+        var data = new List<Vehicle>();
+        
+        if (string.IsNullOrWhiteSpace(identifier) is false)
+        {
+            data.Add(new Sedan { Identifier = identifier, Manufacturer = "Toyota" });
+        };
 
         _mockDb.Setup(e => e.Vehicle)
             .Returns(data.AsQueryable().BuildMockDbSet().Object);
     }
 
-    private static CreateCarCommand GetCommand(string identifier)
+    private static CreateCarCommand GetCommandForIdentifierValidationError(string identifier)
     {
         var request = new CreateCarCommandRequest
         {
@@ -51,4 +102,49 @@ public class CreateCarCommandValidatorTests
 
         return new(request);
     }
+
+    private static CreateCarCommand GetCommandForYearAndStartBidValidationErrors()
+    {
+        var request = new CreateCarCommandRequest
+        {
+            TypeId = (int)ECarType.Hatchback,
+            StartingBid = 0,
+            Manufacturer = "Opel",
+            Year = 1700,
+            NumberOfDoors = 5,
+            Identifier = Guid.NewGuid().ToString()
+        };
+
+        return new(request);
+    }
+
+    private static CreateCarCommand GetCommandForTruckValidationError()
+    {
+        var request = new CreateCarCommandRequest
+        {
+            TypeId = (int)ECarType.Truck,
+            StartingBid = 10000,
+            Manufacturer = "Volvo",
+            Year = 1990,
+            Identifier = Guid.NewGuid().ToString()
+        };
+
+        return new(request);
+    }
+
+    private static CreateCarCommand GetCommandForValidResult()
+    {
+        var request = new CreateCarCommandRequest
+        {
+            TypeId = (int)ECarType.Suv,
+            StartingBid = 10000,
+            Manufacturer = "BMW",
+            Year = 1990,
+            NumberOfSeats = 9,
+            Identifier = Guid.NewGuid().ToString()
+        };
+
+        return new(request);
+    }
+    #endregion
 }
