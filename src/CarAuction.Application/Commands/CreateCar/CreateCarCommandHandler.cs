@@ -19,6 +19,7 @@ public class CreateCarCommandHandler(
 
         if (validationResult.IsValid is false)
         {
+            // TODO
             throw new ValidationException(validationResult.Errors);
         }
 
@@ -38,6 +39,7 @@ public class CreateCarCommandHandler(
             {
                 Identifier = request.Identifier,
                 Manufacturer = request.Manufacturer,
+                Model = request.Model,
                 NumberOfDoors = request.NumberOfDoors.Value,
                 StartingBid = request.StartingBid,
                 Year = request.Year,
@@ -46,6 +48,7 @@ public class CreateCarCommandHandler(
             {
                 Identifier = request.Identifier,
                 Manufacturer = request.Manufacturer,
+                Model = request.Model,
                 NumberOfDoors = request.NumberOfDoors.Value,
                 StartingBid = request.StartingBid,
                 Year = request.Year,
@@ -54,6 +57,7 @@ public class CreateCarCommandHandler(
             {
                 Identifier = request.Identifier,
                 Manufacturer = request.Manufacturer,
+                Model = request.Model,
                 NumberOfSeats = request.NumberOfSeats.Value,
                 StartingBid = request.StartingBid,
                 Year = request.Year,
@@ -62,6 +66,7 @@ public class CreateCarCommandHandler(
             {
                 Identifier = request.Identifier,
                 Manufacturer = request.Manufacturer,
+                Model = request.Model,
                 LoadCapacity = request.LoadCapacity.Value,
                 StartingBid = request.StartingBid,
                 Year = request.Year,

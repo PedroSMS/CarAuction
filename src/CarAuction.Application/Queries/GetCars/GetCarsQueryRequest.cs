@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace CarAuction.Application.Queries.GetCars;
 
-namespace CarAuction.Application.Queries.GetCars
+public record GetCarsQueryRequest
 {
-    public class GetCarsQueryRequest
-    {
-    }
+    public string? Manufacturer { get; init; }
+    public string? Model { get; init; }
+    public int? Year { get; init; }
+
+    public int? TypeId { get; init; }
 }

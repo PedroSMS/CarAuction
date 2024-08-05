@@ -1,6 +1,4 @@
-﻿using Bogus;
-using CarAuction.Application.Common.Interfaces;
-using CarAuction.Domain.Entities;
+﻿using CarAuction.Application.Common.Interfaces;
 using CarAuction.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -26,10 +24,6 @@ public static class DependencyInjection
         services.AddScoped<ICarAuctionContext>(provider =>
             provider.GetRequiredService<CarAuctionContext>());
 
-        using var scope = services.BuildServiceProvider().CreateScope();
-        var db = scope.ServiceProvider.GetRequiredService<CarAuctionContext>();
-
-        db.Database.Migrate();
 
         return services;
     }

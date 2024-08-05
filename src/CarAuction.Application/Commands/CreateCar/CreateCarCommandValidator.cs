@@ -16,6 +16,8 @@ public class CreateCarCommandValidator : AbstractValidator<CreateCarCommand>
             .InclusiveBetween(1885, DateTime.UtcNow.Year);
         RuleFor(r => r.Manufacturer)
             .NotEmpty();
+        RuleFor(r => r.Model)
+            .NotEmpty();
         RuleFor(r => r.Identifier)
             .NotEmpty()
             .MustAsync(async (i, ct) => await CheckIfIdentifierDoesNotExistsInDatabase(db, i, ct))

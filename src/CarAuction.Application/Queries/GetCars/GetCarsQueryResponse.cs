@@ -1,5 +1,4 @@
-﻿using CarAuction.Application.Queries.GetCarById;
-using CarAuction.Domain.Entities;
+﻿using CarAuction.Domain.Entities;
 using CarAuction.Domain.Enums;
 using System.Linq.Expressions;
 
@@ -12,6 +11,7 @@ public class GetCarsQueryResponse
     public string? Type { get; init; }
     public string Identifier { get; init; }
     public string Manufacturer { get; init; }
+    public string Model { get; init; }
     public int Year { get; init; }
     public decimal StartingBid { get; init; }
     public int? NumberOfDoors { get; init; }
@@ -24,6 +24,7 @@ public class GetCarsQueryResponse
             Id = vehicle.Id,
             Identifier = vehicle.Identifier,
             Manufacturer = vehicle.Manufacturer,
+            Model = vehicle.Model,
             Year = vehicle.Year,
             StartingBid = vehicle.StartingBid,
             Type = vehicle is Hatchback ? nameof(ECarType.Hatchback)

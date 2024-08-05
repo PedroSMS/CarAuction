@@ -1,5 +1,4 @@
 ﻿using CarAuction.Application.Commands.CreateCar;
-using CarAuction.Application.Queries.GetCarById;
 using CarAuction.Application.Queries.GetCars;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -10,31 +9,19 @@ namespace CarAuction.API.Controllers
     [ApiController]
     public class CarsController : ControllerBase
     {
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(
-            [FromServices] IMediator mediator,
-            [FromRoute] Guid id)
-        {
-            var result = await mediator.Send(new GetCarByIdQuery(id));
-            
-            return Ok(result);
-        }
 
         [HttpGet]
-        public async Task<IActionResult> Get(
-            [FromServices] IMediator mediator)
+        public async Task<IActionResult> Get([FromServices] IMediator mediator, [FromQuery] GetCarsQueryRequest request)
         {
-            var result = await mediator.Send(new GetCarsQuery());
+            var result = await mediator.Send(new GetCarsQuery(request));
 
             return Ok(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(
-            [FromServices]IMediator mediator, 
-            [FromBody] CreateCarCommandRequest request)
+        public async Task<IActionResult> Create([FromServices]IMediator mediator, [FromBody] CreateCarCommandRequest request)
         {
-            var result = await mediator.Send(request.ToCommand());
+            await mediator.Send(request.ToCommand());
 
             return Created();
         }

@@ -8,6 +8,7 @@ public class CreateCarCommand(CreateCarCommandRequest request) : IRequest<Guid>
     public ECarType TypeId { get; private set; } = (ECarType)request.TypeId;
     public string Identifier { get; private set; } = request.Identifier;
     public string Manufacturer { get; private set; } = request.Manufacturer;
+    public string Model { get; private set; } = request.Model;
     public int Year { get; private set; } = request.Year;
     public decimal StartingBid { get; private set; } = request.StartingBid;
     public int? NumberOfDoors { get; private set; } = request.NumberOfDoors;

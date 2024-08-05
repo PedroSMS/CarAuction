@@ -1,8 +1,12 @@
 ﻿using CarAuction.Application.Common.Interfaces;
+using CarAuction.Domain.Entities;
+using CarAuction.Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarAuction.Application.Queries.GetCars;
+
+public record GetCarsQuery(GetCarsQueryRequest Request) : IRequest<List<GetCarsQueryResponse>>;
 
 public class GetCarsQueryHandler(ICarAuctionContext db) : IRequestHandler<GetCarsQuery, List<GetCarsQueryResponse>>
 {
@@ -10,10 +14,41 @@ public class GetCarsQueryHandler(ICarAuctionContext db) : IRequestHandler<GetCar
 
     public async Task<List<GetCarsQueryResponse>> Handle(GetCarsQuery request, CancellationToken cancellationToken)
     {
-        var cars = await _db.Vehicle
+        return await _db.Vehicle
+            .AddFilters(request.Request)
             .Select(GetCarsQueryResponse.Projection)
             .ToListAsync(cancellationToken);
+    }
+}
 
-        return cars;
+static class GetCarsQueryHandlerExtensions
+{
+    public static IQueryable<Vehicle> AddFilters(this IQueryable<Vehicle> query, GetCarsQueryRequest request)
+    {
+        query = (ECarType?)request.TypeId switch
+        {
+            ECarType.Hatchback => query.Where(e => e.GetType() == typeof(Hatchback)),
+            ECarType.Sedan => query.Where(e => e.GetType() == typeof(Sedan)),
+            ECarType.Suv => query.Where(e => e.GetType() == typeof(Suv)),
+            ECarType.Truck => query.Where(e => e.GetType() == typeof(Truck)),
+            _ => query
+        };
+
+        if (string.IsNullOrWhiteSpace(request.Manufacturer) is false)
+        {
+            query = query.Where(m => m.Manufacturer ==  request.Manufacturer);
+        }
+
+        if (string.IsNullOrWhiteSpace(request.Model) is false)
+        {
+            query = query.Where(m => m.Model == request.Model);
+        }
+
+        if (request.Year.HasValue)
+        {
+            query = query.Where(m => m.Year == request.Year);
+        }
+
+        return query;
     }
 }

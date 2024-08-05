@@ -1,3 +1,4 @@
+using CarAuction.API.Extensions;
 using CarAuction.Application;
 using CarAuction.Infrastructure;
 using System.Text.Json.Serialization;
@@ -27,6 +28,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.EnsureDatabaseIsUpToDate();
 
 app.UseHttpsRedirection();
 

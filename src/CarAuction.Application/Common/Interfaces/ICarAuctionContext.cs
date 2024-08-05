@@ -9,5 +9,5 @@ public interface ICarAuctionContext
     DbSet<Auction> Auction { get; set; }
     DbSet<Bid> Bid { get; set; }
 
-    Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

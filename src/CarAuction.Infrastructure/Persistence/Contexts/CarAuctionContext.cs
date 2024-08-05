@@ -16,7 +16,7 @@ public class CarAuctionContext(DbContextOptions<CarAuctionContext> options) : Db
     public DbSet<Auction> Auction { get; set; }
     public DbSet<Bid> Bid { get; set; }
 
-    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         return await base.SaveChangesAsync(cancellationToken);
     }

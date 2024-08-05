@@ -81,7 +81,7 @@ public class CreateCarCommandValidatorTests
         
         if (string.IsNullOrWhiteSpace(identifier) is false)
         {
-            data.Add(new Sedan { Identifier = identifier, Manufacturer = "Toyota" });
+            data.Add(new Sedan { Identifier = identifier, Manufacturer = "Toyota", Model = "Yaris" });
         };
 
         _mockDb.Setup(e => e.Vehicle)
@@ -95,6 +95,7 @@ public class CreateCarCommandValidatorTests
             TypeId = (int)ECarType.Hatchback,
             StartingBid = 10000,
             Manufacturer = "Opel",
+            Model = "Corsa",
             Year = 1990,
             NumberOfDoors = 5,
             Identifier = identifier
@@ -110,6 +111,7 @@ public class CreateCarCommandValidatorTests
             TypeId = (int)ECarType.Hatchback,
             StartingBid = 0,
             Manufacturer = "Opel",
+            Model = "Corsa",
             Year = 1700,
             NumberOfDoors = 5,
             Identifier = Guid.NewGuid().ToString()
@@ -125,6 +127,7 @@ public class CreateCarCommandValidatorTests
             TypeId = (int)ECarType.Truck,
             StartingBid = 10000,
             Manufacturer = "Volvo",
+            Model = "FE",
             Year = 1990,
             Identifier = Guid.NewGuid().ToString()
         };
@@ -139,6 +142,7 @@ public class CreateCarCommandValidatorTests
             TypeId = (int)ECarType.Suv,
             StartingBid = 10000,
             Manufacturer = "BMW",
+            Model = "X5",
             Year = 1990,
             NumberOfSeats = 9,
             Identifier = Guid.NewGuid().ToString()
