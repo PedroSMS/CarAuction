@@ -1,4 +1,5 @@
-﻿using CarAuction.Application.Commands.CreateAuction;
+﻿using CarAuction.Application.Commands.CloseAuction;
+using CarAuction.Application.Commands.CreateAuction;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,5 +22,13 @@ public class AuctionsController : ControllerBase
         var auction = await mediator.Send(request.ToCommand());
 
         return CreatedAtAction(nameof(GetById), new { id = auction.Id }, auction);
+    }
+
+    [HttpPut("{id}/close")]
+    public async Task<IActionResult> Close([FromServices] IMediator mediator, [FromRoute] Guid id)
+    {
+        await mediator.Send(new CloseAuctionCommand(id));
+
+        return NoContent();
     }
 }

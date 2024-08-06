@@ -1,5 +1,4 @@
-﻿using CarAuction.Application.Commands.CreateCar;
-using CarAuction.Application.Common.Interfaces;
+﻿using CarAuction.Application.Common.Interfaces;
 using CarAuction.Domain.Entities;
 using FluentValidation;
 using MediatR;
