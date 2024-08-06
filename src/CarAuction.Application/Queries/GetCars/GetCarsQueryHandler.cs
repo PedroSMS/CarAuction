@@ -6,8 +6,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CarAuction.Application.Queries.GetCars;
 
-public record GetCarsQuery(GetCarsQueryRequest Request) : IRequest<List<GetCarsQueryResponse>>;
-
 public class GetCarsQueryHandler(ICarAuctionContext db) : IRequestHandler<GetCarsQuery, List<GetCarsQueryResponse>>
 {
     private readonly ICarAuctionContext _db = db;
@@ -15,7 +13,7 @@ public class GetCarsQueryHandler(ICarAuctionContext db) : IRequestHandler<GetCar
     public async Task<List<GetCarsQueryResponse>> Handle(GetCarsQuery request, CancellationToken cancellationToken)
     {
         return await _db.Vehicle
-            .AddFilters(request.Request)
+            .AddRequestFilters(request.Request)
             .Select(GetCarsQueryResponse.Projection)
             .ToListAsync(cancellationToken);
     }
@@ -23,7 +21,7 @@ public class GetCarsQueryHandler(ICarAuctionContext db) : IRequestHandler<GetCar
 
 static class GetCarsQueryHandlerExtensions
 {
-    public static IQueryable<Vehicle> AddFilters(this IQueryable<Vehicle> query, GetCarsQueryRequest request)
+    public static IQueryable<Vehicle> AddRequestFilters(this IQueryable<Vehicle> query, GetCarsQueryRequest request)
     {
         query = (ECarType?)request.TypeId switch
         {

@@ -5,50 +5,50 @@ namespace CarAuction.Application.Commands.CreateCar;
 
 public interface ICreateCarCommandAdapter
 {
-    Vehicle GetCarFrom(CreateCarCommand command);
+    Vehicle GetCarFrom(CreateCarCommand request);
 }
 
 public class CreateCarCommandAdapter : ICreateCarCommandAdapter
 {
-    public Vehicle GetCarFrom(CreateCarCommand command)
+    public Vehicle GetCarFrom(CreateCarCommand request)
     {
-        return command.TypeId switch
+        return request.TypeId switch
         {
             ECarType.Hatchback => new Hatchback
             {
-                Identifier = command.Identifier,
-                Manufacturer = command.Manufacturer,
-                Model = command.Model,
-                NumberOfDoors = command.NumberOfDoors.Value,
-                StartingBid = command.StartingBid,
-                Year = command.Year,
+                Identifier = request.Identifier,
+                Manufacturer = request.Manufacturer,
+                Model = request.Model,
+                NumberOfDoors = request.NumberOfDoors!.Value,
+                StartingBid = request.StartingBid,
+                Year = request.Year,
             },
             ECarType.Sedan => new Sedan
             {
-                Identifier = command.Identifier,
-                Manufacturer = command.Manufacturer,
-                Model = command.Model,
-                NumberOfDoors = command.NumberOfDoors.Value,
-                StartingBid = command.StartingBid,
-                Year = command.Year,
+                Identifier = request.Identifier,
+                Manufacturer = request.Manufacturer,
+                Model = request.Model,
+                NumberOfDoors = request.NumberOfDoors!.Value,
+                StartingBid = request.StartingBid,
+                Year = request.Year,
             },
             ECarType.Suv => new Suv
             {
-                Identifier = command.Identifier,
-                Manufacturer = command.Manufacturer,
-                Model = command.Model,
-                NumberOfSeats = command.NumberOfSeats.Value,
-                StartingBid = command.StartingBid,
-                Year = command.Year,
+                Identifier = request.Identifier,
+                Manufacturer = request.Manufacturer,
+                Model = request.Model,
+                NumberOfSeats = request.NumberOfSeats!.Value,
+                StartingBid = request.StartingBid,
+                Year = request.Year,
             },
             ECarType.Truck => new Truck
             {
-                Identifier = command.Identifier,
-                Manufacturer = command.Manufacturer,
-                Model = command.Model,
-                LoadCapacity = command.LoadCapacity.Value,
-                StartingBid = command.StartingBid,
-                Year = command.Year,
+                Identifier = request.Identifier,
+                Manufacturer = request.Manufacturer,
+                Model = request.Model,
+                LoadCapacity = request.LoadCapacity!.Value,
+                StartingBid = request.StartingBid,
+                Year = request.Year,
             },
             _ => throw new ArgumentOutOfRangeException(nameof(CreateCarCommandAdapter))
         };

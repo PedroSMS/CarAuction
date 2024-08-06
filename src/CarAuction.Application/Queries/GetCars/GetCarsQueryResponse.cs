@@ -9,9 +9,9 @@ public class GetCarsQueryResponse
     public Guid Id { get; init; }
     public int? TypeId { get; init; }
     public string? Type { get; init; }
-    public string Identifier { get; init; }
-    public string Manufacturer { get; init; }
-    public string Model { get; init; }
+    public string Identifier { get; init; } = null!;
+    public string Manufacturer { get; init; } = null!;
+    public string Model { get; init; } = null!;
     public int Year { get; init; }
     public decimal StartingBid { get; init; }
     public int? NumberOfDoors { get; init; }

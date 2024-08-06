@@ -1,4 +1,5 @@
-﻿using CarAuction.Application.Commands.CreateCar;
+﻿using CarAuction.Application.Commands.CreateAuction;
+using CarAuction.Application.Commands.CreateCar;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -13,6 +14,7 @@ public static class DependencyInjection
         services.AddValidatorsFromAssemblyContaining<CreateCarCommandValidator>();
 
         services.AddScoped<ICreateCarCommandAdapter, CreateCarCommandAdapter>();
+        services.AddScoped<ICreateAuctionCommandAdapter, CreateAuctionCommandAdapter>();
 
         return services;
     }

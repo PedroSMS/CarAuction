@@ -10,17 +10,21 @@ namespace CarAuction.UnitTests.Application.Commands.CreateCar;
 
 public class CreateCarCommandValidatorTests
 {
-    private CreateCarCommandValidator? _sut;
+    private CreateCarCommandValidator _sut;
     private Mock<ICarAuctionContext> _mockDb = new Mock<ICarAuctionContext>();
+
+    public CreateCarCommandValidatorTests()
+    {
+        _sut = new(_mockDb.Object);
+    }
 
     [Fact]
     public async Task ValidateAsync_ShouldReturnInvalidResult_WhenIdentifierAlreadyExistsInDatabase()
     {
         // Arrange
         const string identifier = "SameIdentifier!";
-        UpdateMockDb(identifier);
         var command = GetCommandForIdentifierValidationError(identifier);
-        _sut = new CreateCarCommandValidator(_mockDb.Object);
+        UpdateMockDb(identifier);
 
         // Act
         var result = await _sut.ValidateAsync(command);
@@ -33,9 +37,8 @@ public class CreateCarCommandValidatorTests
     public async Task ValidateAsync_ShouldReturnInvalidResult_WhenYearIsLessThan1885AndStartBidIs0()
     {
         // Arrange
-        UpdateMockDb();
         var command = GetCommandForYearAndStartBidValidationErrors();
-        _sut = new CreateCarCommandValidator(_mockDb.Object);
+        UpdateMockDb();
 
         // Act
         var result = await _sut.ValidateAsync(command);
@@ -48,9 +51,8 @@ public class CreateCarCommandValidatorTests
     public async Task ValidateAsync_ShouldReturnInvalidResult_WhenTypeIsTruckAndDontHaveLoadCapacityPropertySet()
     {
         // Arrange
-        UpdateMockDb();
         var command = GetCommandForTruckValidationError();
-        _sut = new CreateCarCommandValidator(_mockDb.Object);
+        UpdateMockDb();
 
         // Act
         var result = await _sut.ValidateAsync(command);
@@ -63,9 +65,8 @@ public class CreateCarCommandValidatorTests
     public async Task ValidateAsync_ShouldReturnValidResult_WhenHaveAllSuvPropertiesRequiredSet()
     {
         // Arrange
-        UpdateMockDb();
         var command = GetCommandForValidResult();
-        _sut = new CreateCarCommandValidator(_mockDb.Object);
+        UpdateMockDb();
 
         // Act
         var result = await _sut.ValidateAsync(command);
@@ -101,7 +102,7 @@ public class CreateCarCommandValidatorTests
             Identifier = identifier
         };
 
-        return new(request);
+        return request.ToCommand();
     }
 
     private static CreateCarCommand GetCommandForYearAndStartBidValidationErrors()
@@ -117,7 +118,7 @@ public class CreateCarCommandValidatorTests
             Identifier = Guid.NewGuid().ToString()
         };
 
-        return new(request);
+        return request.ToCommand();
     }
 
     private static CreateCarCommand GetCommandForTruckValidationError()
@@ -132,7 +133,7 @@ public class CreateCarCommandValidatorTests
             Identifier = Guid.NewGuid().ToString()
         };
 
-        return new(request);
+        return request.ToCommand();
     }
 
     private static CreateCarCommand GetCommandForValidResult()
@@ -148,7 +149,7 @@ public class CreateCarCommandValidatorTests
             Identifier = Guid.NewGuid().ToString()
         };
 
-        return new(request);
+        return request.ToCommand();
     }
     #endregion
 }

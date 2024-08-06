@@ -4,7 +4,7 @@ namespace CarAuction.Domain.Entities;
 
 public abstract class Vehicle : IBiddable
 {
-    public Guid Id { get; } = Guid.NewGuid();
+    public Guid Id { get; set; } = Guid.NewGuid();
     public required string Identifier { get; set; }
     public required string Manufacturer { get; set; }
     public required string Model { get; set; }

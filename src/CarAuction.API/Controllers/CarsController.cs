@@ -3,33 +3,33 @@ using CarAuction.Application.Queries.GetCars;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CarAuction.API.Controllers
+namespace CarAuction.API.Controllers;
+
+[Route("api/cars")]
+[ApiController]
+public class CarsController : ControllerBase
 {
-    [Route("api/cars")]
-    [ApiController]
-    public class CarsController : ControllerBase
+
+    [HttpGet]
+    public async Task<IActionResult> Get([FromServices] IMediator mediator, [FromQuery] GetCarsQueryRequest request)
     {
+        var result = await mediator.Send(new GetCarsQuery(request));
 
-        [HttpGet]
-        public async Task<IActionResult> Get([FromServices] IMediator mediator, [FromQuery] GetCarsQueryRequest request)
-        {
-            var result = await mediator.Send(new GetCarsQuery(request));
+        return Ok(result);
+    }
 
-            return Ok(result);
-        }
+    // Just a placeholder for the method 'CreatedAtAction'
+    [HttpGet("{id}")]
+    public IActionResult GetById()
+    {
+        return Ok();
+    }
 
-        [HttpPost]
-        public async Task<IActionResult> Create([FromServices]IMediator mediator, [FromBody] CreateCarCommandRequest request)
-        {
-            var car = await mediator.Send(request.ToCommand());
+    [HttpPost]
+    public async Task<IActionResult> Create([FromServices]IMediator mediator, [FromBody] CreateCarCommandRequest request)
+    {
+        var car = await mediator.Send(request.ToCommand());
 
-            return CreatedAtAction(nameof(GetById), new { id = car.Id }, car);
-        }
-
-        [HttpGet("{id}")]
-        public IActionResult GetById([FromServices] IMediator mediator)
-        {
-            return Ok();
-        }
+        return CreatedAtAction(nameof(GetById), new { id = car.Id }, car);
     }
 }
