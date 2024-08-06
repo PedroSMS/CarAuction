@@ -20,7 +20,7 @@ public class CreateCarCommandValidator : AbstractValidator<CreateCarCommand>
             .NotEmpty();
         RuleFor(r => r.Identifier)
             .NotEmpty()
-            .MustAsync(async (i, ct) => await CheckIfIdentifierDoesNotExistsInDatabase(db, i, ct))
+            .MustAsync(async (i, ct) => await DoNotExistInDatabaseAsync(db, i, ct))
             .WithMessage("Identifier already exists in the database.");
         RuleFor(r => r.StartingBid)
             .NotEmpty();
@@ -38,7 +38,7 @@ public class CreateCarCommandValidator : AbstractValidator<CreateCarCommand>
             .When(r => r.TypeId == ECarType.Truck);
     }
 
-    private static async Task<bool> CheckIfIdentifierDoesNotExistsInDatabase(
+    private static async Task<bool> DoNotExistInDatabaseAsync(
         ICarAuctionContext db, string identifier, CancellationToken cancellationToken)
     {
         return await db.Vehicle.AnyAsync(e => e.Identifier == identifier, cancellationToken) is false;

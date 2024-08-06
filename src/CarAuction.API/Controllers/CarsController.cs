@@ -21,9 +21,15 @@ namespace CarAuction.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromServices]IMediator mediator, [FromBody] CreateCarCommandRequest request)
         {
-            await mediator.Send(request.ToCommand());
+            var car = await mediator.Send(request.ToCommand());
 
-            return Created();
+            return CreatedAtAction(nameof(GetById), new { id = car.Id }, car);
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetById([FromServices] IMediator mediator)
+        {
+            return Ok();
         }
     }
 }

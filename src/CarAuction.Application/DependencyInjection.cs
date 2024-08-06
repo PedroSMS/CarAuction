@@ -12,6 +12,8 @@ public static class DependencyInjection
         services.AddMediatR(e => e.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
         services.AddValidatorsFromAssemblyContaining<CreateCarCommandValidator>();
 
+        services.AddScoped<ICreateCarCommandAdapter, CreateCarCommandAdapter>();
+
         return services;
     }
 }

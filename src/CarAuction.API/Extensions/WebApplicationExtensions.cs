@@ -1,5 +1,4 @@
 ﻿using CarAuction.Infrastructure.Persistence.Context;
-using Microsoft.EntityFrameworkCore;
 
 namespace CarAuction.API.Extensions;
 
@@ -10,6 +9,6 @@ public static class WebApplicationExtensions
         using var scope = application.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<CarAuctionContext>();
 
-        db.Database.Migrate();
+        db.Database.EnsureCreated();
     }
 }
