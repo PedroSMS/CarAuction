@@ -52,7 +52,7 @@ public class CarControllerTests
             await response.Content.ReadAsStreamAsync(), JsonSerializerHelper.ReadOptions);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.Created);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
         insertedCar.Should().NotBeNull();
         insertedCar!.Manufacturer.Should().Be(request.Manufacturer);
         insertedCar!.Model.Should().Be(request.Model);

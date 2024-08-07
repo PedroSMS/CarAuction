@@ -19,7 +19,7 @@ public class GetCarsQueryHandler(ICarAuctionContext db) : IRequestHandler<GetCar
     }
 }
 
-static class GetCarsQueryHandlerExtensions
+internal static class GetCarsQueryHandlerExtensions
 {
     public static IQueryable<Vehicle> AddRequestFilters(this IQueryable<Vehicle> query, GetCarsQueryRequest request)
     {
@@ -42,7 +42,7 @@ static class GetCarsQueryHandlerExtensions
             query = query.Where(m => m.Model == request.Model);
         }
 
-        if (request.Year.HasValue)
+        if (request.Year.HasValue && request.Year > 0)
         {
             query = query.Where(m => m.Year == request.Year);
         }

@@ -20,6 +20,6 @@ public class CloseAuctionCommandHandler(ICarAuctionContext db) : IRequestHandler
         auction!.FinishedAtUtc = DateTime.UtcNow;
         await _db.SaveChangesAsync(cancellationToken);
 
-        return Result.Success(Unit.Value);
+        return Unit.Value;
     }
 }

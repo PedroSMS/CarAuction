@@ -12,11 +12,13 @@ public class CreateBidCommandValidator : AbstractValidator<CreateBidCommand>
         RuleFor(e => e.AuctionId)
             .NotEmpty();
         RuleFor(e => e.Value)
-            .GreaterThan(0)
             .Must((command, _) => BeHigherThanLastBidOrIntitialBid(command, db, out _bidErrorMessage))
-            .WithMessage(m => _bidErrorMessage);
+            .WithMessage(m => _bidErrorMessage)
+            .NotEmpty()
+            .GreaterThan(0);
     }
 
+    #region private
     private static bool BeHigherThanLastBidOrIntitialBid(
         CreateBidCommand command, ICarAuctionContext db, out string bidErrorMessage)
     {
@@ -27,6 +29,7 @@ public class CreateBidCommandValidator : AbstractValidator<CreateBidCommand>
 
         bidErrorMessage = $"Must place a bid higher than '{minimumBidValue}'.";
 
-        return minimumBidValue < command.Value;
+        return minimumBidValue is 0 || minimumBidValue < command.Value;
     }
+    #endregion
 }

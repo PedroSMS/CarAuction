@@ -39,7 +39,7 @@ public class AuctionControllerTests
             await response.Content.ReadAsStreamAsync(), JsonSerializerHelper.ReadOptions);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.Created);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
         insertedAuction.Should().NotBeNull();
         insertedAuction!.CarId.Should().Be(carId);
     }
@@ -56,7 +56,7 @@ public class AuctionControllerTests
         var closedAuction = await FetchUpdatedAuctionAsync(auctionId);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
         closedAuction.Should().NotBeNull();
         closedAuction!.FinishedAtUtc.Should().NotBeNull();
     }

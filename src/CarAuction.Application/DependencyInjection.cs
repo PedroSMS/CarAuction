@@ -1,6 +1,7 @@
 ﻿using CarAuction.Application.Commands.CreateAuction;
 using CarAuction.Application.Commands.CreateBid;
 using CarAuction.Application.Commands.CreateCar;
+using CarAuction.Application.Common.Behaviors;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -11,8 +12,13 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this  IServiceCollection services)
     {
-        services.AddMediatR(e => e.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
-        services.AddValidatorsFromAssemblyContaining<CreateCarCommandValidator>();
+        services.AddMediatR(config =>
+        {
+            config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+            config.AddOpenBehavior(typeof(ValidationBehavior<,>));
+        });
+        
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
         services.AddScoped<ICreateCarCommandAdapter, CreateCarCommandAdapter>();
         services.AddScoped<ICreateAuctionCommandAdapter, CreateAuctionCommandAdapter>();

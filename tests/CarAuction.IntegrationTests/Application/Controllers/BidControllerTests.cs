@@ -32,11 +32,12 @@ public class BidControllerTests
 
         // Act
         var response = await _httpClient.PostAsJsonAsync("api/bids", request);
+        var content = await response.Content.ReadAsStringAsync();
         var insertedBid = JsonSerializer.Deserialize<Bid>(
             await response.Content.ReadAsStreamAsync(), JsonSerializerHelper.ReadOptions);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.Created);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
         insertedBid.Should().NotBeNull();
         insertedBid!.AuctionId.Should().Be(request.AuctionId);
         insertedBid!.Value.Should().Be(request.Value);

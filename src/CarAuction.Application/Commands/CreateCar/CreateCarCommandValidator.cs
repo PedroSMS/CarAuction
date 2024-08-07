@@ -38,9 +38,11 @@ public class CreateCarCommandValidator : AbstractValidator<CreateCarCommand>
             .When(r => r.TypeId == ECarType.Truck);
     }
 
+    #region private
     private static async Task<bool> DoNotExistInDatabaseAsync(
         ICarAuctionContext db, string identifier, CancellationToken cancellationToken)
     {
         return await db.Vehicle.AnyAsync(e => e.Identifier == identifier, cancellationToken) is false;
     }
+    #endregion
 }

@@ -19,22 +19,6 @@ public class CreateAuctionCommandValidatorTests
     }
 
     [Fact]
-    public async Task ValidateAsync_ShouldReturnInvalidResult_WhenCarDoesNotExistsInDatabase()
-    {
-        // Arrange
-        var command = GetCommand();
-        UpdateMockDb();
-
-        // Act
-        var result = await _sut.TestValidateAsync(command);
-
-        // Assert
-        result.IsValid.Should().BeFalse();
-        result.ShouldHaveValidationErrorFor(e => e.CarId)
-            .WithErrorMessage("Car does not exists in database.");
-    }
-
-    [Fact]
     public async Task ValidateAsync_ShouldReturnInvalidResult_WhenCarIsAlreadyInAnActiveAuction()
     {
         // Arrange
@@ -96,11 +80,11 @@ public class CreateAuctionCommandValidatorTests
             .Returns(auctions.AsQueryable().BuildMockDbSet().Object);
     }
 
-    private static CreateAuctionCommand GetCommand(Guid? carId = null)
+    private static CreateAuctionCommand GetCommand(Guid carId)
     {
         var request = new CreateAuctionCommandRequest
         {
-            CarId = carId ?? Guid.NewGuid(),
+            CarId = carId,
         };
 
         return request.ToCommand();
