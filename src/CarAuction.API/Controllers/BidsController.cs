@@ -1,5 +1,4 @@
 ﻿using CarAuction.Application.Commands.CreateBid;
-using CarAuction.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

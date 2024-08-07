@@ -1,3 +1,4 @@
+using CarAuction.API;
 using CarAuction.API.Extensions;
 using CarAuction.Application;
 using CarAuction.Infrastructure;
@@ -7,8 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services
-    .AddInfrastructure(builder.Configuration)
-    .AddApplication();
+    .AddApi()
+    .AddApplication()
+    .AddInfrastructure(builder.Configuration);
 
 builder.Services
     .AddControllers()
@@ -28,6 +30,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseExceptionHandler();
 
 app.EnsureDatabaseIsUpToDate();
 
