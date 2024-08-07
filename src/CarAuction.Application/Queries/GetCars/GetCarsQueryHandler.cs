@@ -42,7 +42,7 @@ internal static class GetCarsQueryHandlerExtensions
             query = query.Where(m => m.Model == request.Model);
         }
 
-        if (request.Year.HasValue && request.Year > 0)
+        if (request.Year.HasValue)
         {
             query = query.Where(m => m.Year == request.Year);
         }

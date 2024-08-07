@@ -4,6 +4,8 @@ using CarAuction.Domain.Entities;
 using CarAuction.IntegrationTests.Fixtures;
 using CarAuction.IntegrationTests.Helpers;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
 using System.Net.Http.Json;
@@ -14,6 +16,7 @@ namespace CarAuction.IntegrationTests.Application.Controllers;
 [Collection(nameof(CustomApplicationFactoryCollection))]
 public class BidControllerTests
 {
+    private const string Endpoint = "api/bids";
     private readonly HttpClient _httpClient;
     private readonly ICarAuctionContext _db;
 
@@ -24,15 +27,32 @@ public class BidControllerTests
     }
 
     [Fact]
-    public async Task Create_ShouldCreateBidAuction_WhenRequestIsValid()
+    public async Task Create_ShouldReturnBadRequest_WhenBidIsLessThanCurrentBid()
+    {
+        // Arrange
+        var auctionId = await SeedDatabaseWithAuction();
+        var request = GetRequest(auctionId, 1);
+
+        // Act
+        var response = await _httpClient.PostAsJsonAsync(Endpoint, request);
+        var responseContent = JsonSerializer.Deserialize<ProblemDetails>(
+            await response.Content.ReadAsStreamAsync(), JsonSerializerHelper.ReadOptions);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        responseContent.Should().NotBeNull();
+        responseContent!.Status.Should().Be(StatusCodes.Status400BadRequest);
+    }
+
+    [Fact]
+    public async Task Create_ShouldCreateBidAuction_WhenRequestIsValidAnBidIsHigherThanCurrentOne()
     {
         // Arrange
         var auctionId = await SeedDatabaseWithAuction();
         var request = GetRequest(auctionId);
 
         // Act
-        var response = await _httpClient.PostAsJsonAsync("api/bids", request);
-        var content = await response.Content.ReadAsStringAsync();
+        var response = await _httpClient.PostAsJsonAsync(Endpoint, request);
         var insertedBid = JsonSerializer.Deserialize<Bid>(
             await response.Content.ReadAsStreamAsync(), JsonSerializerHelper.ReadOptions);
 

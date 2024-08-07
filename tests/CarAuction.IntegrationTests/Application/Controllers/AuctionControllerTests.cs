@@ -4,6 +4,8 @@ using CarAuction.Domain.Entities;
 using CarAuction.IntegrationTests.Fixtures;
 using CarAuction.IntegrationTests.Helpers;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
@@ -15,6 +17,7 @@ namespace CarAuction.IntegrationTests.Application.Controllers;
 [Collection(nameof(CustomApplicationFactoryCollection))]
 public class AuctionControllerTests
 {
+    private const string Endpoint = "api/auctions";
     private readonly CustomApplicationFactory _factory;
     private readonly HttpClient _httpClient;
     private readonly ICarAuctionContext _db;
@@ -27,6 +30,41 @@ public class AuctionControllerTests
     }
 
     [Fact]
+    public async Task Create_ShouldReturnBadRequest_WhenVehicleIsAlreadyInAnActiveAuction()
+    {
+        // Arrange
+        var carId = await SeedDatabaseWithTruckInAnActiveAuction();
+        var request = GetRequest(carId);
+
+        // Act
+        var response = await _httpClient.PostAsJsonAsync(Endpoint, request);
+        var responseContent = JsonSerializer.Deserialize<ProblemDetails>(
+            await response.Content.ReadAsStreamAsync(), JsonSerializerHelper.ReadOptions);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        responseContent.Should().NotBeNull();
+        responseContent!.Status.Should().Be(StatusCodes.Status400BadRequest);
+    }
+
+    [Fact]
+    public async Task Create_ShouldReturnNotFound_WhenVehicleIsNotInTheDatabase()
+    {
+        // Arrange
+        var request = GetRequest(Guid.NewGuid());
+
+        // Act
+        var response = await _httpClient.PostAsJsonAsync(Endpoint, request);
+        var responseContent = JsonSerializer.Deserialize<ProblemDetails>(
+            await response.Content.ReadAsStreamAsync(), JsonSerializerHelper.ReadOptions);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        responseContent.Should().NotBeNull();
+        responseContent!.Status.Should().Be(StatusCodes.Status404NotFound);
+    }
+
+    [Fact]
     public async Task Create_ShouldCreateNewAuction_WhenRequestIsValid()
     {
         // Arrange
@@ -34,7 +72,7 @@ public class AuctionControllerTests
         var request = GetRequest(carId);
 
         // Act
-        var response = await _httpClient.PostAsJsonAsync("api/auctions", request);
+        var response = await _httpClient.PostAsJsonAsync(Endpoint, request);
         var insertedAuction = JsonSerializer.Deserialize<Auction>(
             await response.Content.ReadAsStreamAsync(), JsonSerializerHelper.ReadOptions);
 
@@ -45,14 +83,30 @@ public class AuctionControllerTests
     }
 
     [Fact]
+    public async Task Close_ShouldReturnNotFound_WhenAuctionIsNotInDatabaseOrItIsAlreadyClosed()
+    {
+        // Arrange
+        var auctionId = await SeedDatabaseWithAuction(true);
+
+        // Act
+        var response = await _httpClient.PutAsync($"{Endpoint}/{auctionId}/close", null);
+        var responseContent = JsonSerializer.Deserialize<ProblemDetails>(
+            await response.Content.ReadAsStreamAsync(), JsonSerializerHelper.ReadOptions);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        responseContent.Should().NotBeNull();
+        responseContent!.Status.Should().Be(StatusCodes.Status404NotFound);
+    }
+
+    [Fact]
     public async Task Close_ShouldCloseAnAuction_WhenRequestIsValid()
     {
         // Arrange
-        var db = _factory.GetRequiredService<ICarAuctionContext>();
         var auctionId = await SeedDatabaseWithAuction();
 
         // Act
-        var response = await _httpClient.PutAsync($"api/auctions/{auctionId}/close", null);
+        var response = await _httpClient.PutAsync($"{Endpoint}/{auctionId}/close", null);
         var closedAuction = await FetchUpdatedAuctionAsync(auctionId);
 
         // Assert
@@ -61,13 +115,24 @@ public class AuctionControllerTests
         closedAuction!.FinishedAtUtc.Should().NotBeNull();
     }
 
-
     #region private
     private async Task<Guid> SeedDatabaseWithTruck()
     {
         var truck = DatabaseSeederHelper.GetTrucks(1).First();
 
         _db.Vehicle.Add(truck);
+        await _db.SaveChangesAsync();
+
+        return truck.Id;
+    }
+
+    private async Task<Guid> SeedDatabaseWithTruckInAnActiveAuction()
+    {
+        var truck = DatabaseSeederHelper.GetTrucks(1).First();
+        var auction = DatabaseSeederHelper.GetAuctionsForCar(1, truck.Id).First();
+
+        _db.Vehicle.Add(truck);
+        _db.Auction.Add(auction);
         await _db.SaveChangesAsync();
 
         return truck.Id;
@@ -81,10 +146,14 @@ public class AuctionControllerTests
         };
     }
 
-    private async Task<Guid> SeedDatabaseWithAuction()
+    private async Task<Guid> SeedDatabaseWithAuction(bool isFinished = false)
     {
-        var truck = DatabaseSeederHelper.GetTrucks(1).First();
-        var auction = DatabaseSeederHelper.GetAuctionsForCar(1, truck.Id).First();
+        var truck = DatabaseSeederHelper
+            .GetTrucks(1)
+            .First();
+        var auction = DatabaseSeederHelper
+            .GetAuctionsForCar(1, truck.Id, isFinished)
+            .First();
         
         _db.Vehicle.Add(truck);
         _db.Auction.Add(auction);

@@ -44,11 +44,12 @@ public static class DatabaseSeederHelper
             .Generate(number);
     }
 
-    public static List<Auction> GetAuctionsForCar(int number, Guid carId)
+    public static List<Auction> GetAuctionsForCar(int number, Guid carId, bool isFinished = false)
     {
         return new Faker<Auction>()
             .RuleFor(r => r.Id, f => Guid.NewGuid())
             .RuleFor(r => r.CarId, f => carId)
+            .RuleFor(r => r.FinishedAtUtc, f => isFinished ? DateTime.UtcNow : null)
             .RuleFor(r => r.Bids, f => 
             [
                 new() { Value = 25500, PlacedAtUtc = DateTime.UtcNow }

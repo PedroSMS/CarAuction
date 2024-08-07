@@ -6,6 +6,8 @@ using CarAuction.Domain.Enums;
 using CarAuction.IntegrationTests.Fixtures;
 using CarAuction.IntegrationTests.Helpers;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
 using System.Net.Http.Json;
@@ -17,6 +19,7 @@ namespace CarAuction.IntegrationTests.Application.Controllers;
 [Collection(nameof(CustomApplicationFactoryCollection))]
 public class CarControllerTests
 {
+    private const string Endpoint = "api/cars";
     private readonly HttpClient _httpClient;
     private readonly ICarAuctionContext _db;
 
@@ -33,11 +36,28 @@ public class CarControllerTests
         await SeedDatabase();
 
         // Act
-        var result = await _httpClient.GetFromJsonAsync<List<GetCarsQueryResponse>>("api/cars?typeId=1");
+        var result = await _httpClient.GetFromJsonAsync<List<GetCarsQueryResponse>>($"{Endpoint}?typeId=1");
 
         // Assert
         result.Should().NotBeNullOrEmpty();
         result!.Count.Should().Be(4);
+    }
+
+    [Fact]
+    public async Task Create_ShouldReturnBadRequest_WhenTypeIsHatchbackAndDoesNotHaveNumberOfDoorsSet()
+    {
+        // Arrange
+        var request = GetInvalidRequest();
+
+        // Act
+        var response = await _httpClient.PostAsJsonAsync(Endpoint, request);
+        var responseContent = JsonSerializer.Deserialize<ProblemDetails>(
+            await response.Content.ReadAsStreamAsync(), JsonSerializerHelper.ReadOptions);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        responseContent.Should().NotBeNull();
+        responseContent!.Status.Should().Be(StatusCodes.Status400BadRequest);
     }
 
     [Fact]
@@ -78,6 +98,19 @@ public class CarControllerTests
             Manufacturer = "Volvo",
             Model = "FE",
             TypeId = (int)ECarType.Truck,
+            Year = 2000,
+            StartingBid = 25000
+        };
+    }
+
+    private CreateCarCommandRequest GetInvalidRequest()
+    {
+        return new()
+        {
+            Identifier = Guid.NewGuid().ToString(),
+            Manufacturer = "Volvo",
+            Model = "FE",
+            TypeId = (int)ECarType.Hatchback,
             Year = 2000,
             StartingBid = 25000
         };

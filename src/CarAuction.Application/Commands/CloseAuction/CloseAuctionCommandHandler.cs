@@ -12,7 +12,7 @@ public class CloseAuctionCommandHandler(ICarAuctionContext db) : IRequestHandler
     public async Task<Result<Unit>> Handle(CloseAuctionCommand request, CancellationToken cancellationToken)
     {
         var auction = await _db.Auction
-            .FirstOrDefaultAsync(e => e.Id == request.Id, 
+            .FirstOrDefaultAsync(e => e.Id == request.Id && !e.FinishedAtUtc.HasValue, 
                 cancellationToken);
 
         if (auction is null) return Result.NotFound($"Unable to find auction with id '{request.Id}'");

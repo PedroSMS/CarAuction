@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace CarAuction.API.Handlers;
 
@@ -21,7 +22,7 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
             Detail = "An unhandled exception has occurred while executing the request. Please contact administrator with the trace id.",
             Extensions = new Dictionary<string, object?>
             {
-                { "traceId", httpContext.TraceIdentifier }
+                { "traceId", Activity.Current?.Id ?? httpContext.TraceIdentifier }
             }
         };
 

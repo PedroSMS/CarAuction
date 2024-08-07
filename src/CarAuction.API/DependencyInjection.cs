@@ -6,9 +6,9 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApi(this IServiceCollection services)
     {
+        services.AddProblemDetails();
         services.AddExceptionHandler<ValidationExceptionHandler>();
         services.AddExceptionHandler<GlobalExceptionHandler>();
-        services.AddProblemDetails();
 
         return services;
     }
