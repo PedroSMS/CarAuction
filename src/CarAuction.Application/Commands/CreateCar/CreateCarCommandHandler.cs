@@ -1,4 +1,6 @@
-﻿using CarAuction.Application.Common.Interfaces;
+﻿using Ardalis.Result;
+using Ardalis.Result.FluentValidation;
+using CarAuction.Application.Common.Interfaces;
 using CarAuction.Domain.Entities;
 using FluentValidation;
 using MediatR;
@@ -8,20 +10,19 @@ namespace CarAuction.Application.Commands.CreateCar;
 public class CreateCarCommandHandler(
     ICarAuctionContext db,
     IValidator<CreateCarCommand> validator,
-    ICreateCarCommandAdapter adapter) : IRequestHandler<CreateCarCommand, Vehicle>
+    ICreateCarCommandAdapter adapter) : IRequestHandler<CreateCarCommand, Result<Vehicle>>
 {
     private readonly ICarAuctionContext _db = db;
     private readonly IValidator<CreateCarCommand> _validator = validator;
     private readonly ICreateCarCommandAdapter _adapter = adapter;
 
-    public async Task<Vehicle> Handle(CreateCarCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Vehicle>> Handle(CreateCarCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
         if (validationResult.IsValid is false)
         {
-            // TODO
-            throw new ValidationException(validationResult.Errors);
+            return Result.Invalid(validationResult.AsErrors());
         }
 
         var car = _adapter.GetCarFrom(request);
@@ -29,6 +30,6 @@ public class CreateCarCommandHandler(
         _db.Vehicle.Add(car);
         await _db.SaveChangesAsync(cancellationToken);
 
-        return car;
+        return Result.Success(car);
     }
 }

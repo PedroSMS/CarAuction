@@ -1,5 +1,7 @@
-﻿using CarAuction.Application.Commands.CreateCar;
+﻿using Ardalis.Result.AspNetCore;
+using CarAuction.Application.Commands.CreateCar;
 using CarAuction.Application.Queries.GetCars;
+using CarAuction.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,18 +20,11 @@ public class CarsController : ControllerBase
         return Ok(result);
     }
 
-    // Just a placeholder for the method 'CreatedAtAction'
-    [HttpGet("{id}")]
-    public IActionResult GetById()
-    {
-        return Ok();
-    }
-
     [HttpPost]
-    public async Task<IActionResult> Create([FromServices]IMediator mediator, [FromBody] CreateCarCommandRequest request)
+    public async Task<ActionResult<Vehicle>> Create([FromServices]IMediator mediator, [FromBody] CreateCarCommandRequest request)
     {
-        var car = await mediator.Send(request.ToCommand());
+        var result = await mediator.Send(request.ToCommand());
 
-        return CreatedAtAction(nameof(GetById), new { id = car.Id }, car);
+        return this.ToActionResult(result);
     }
 }

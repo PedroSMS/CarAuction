@@ -1,6 +1,7 @@
-﻿using CarAuction.Domain.Entities;
+﻿using Ardalis.Result;
+using CarAuction.Domain.Entities;
 using MediatR;
 
 namespace CarAuction.Application.Commands.CreateAuction;
 
-public record CreateAuctionCommand(Guid CarId) : IRequest<Auction>;
+public record CreateAuctionCommand(Guid CarId) : IRequest<Result<Auction>>;

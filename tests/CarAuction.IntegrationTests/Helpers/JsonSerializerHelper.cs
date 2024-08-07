@@ -2,7 +2,7 @@
 
 namespace CarAuction.IntegrationTests.Helpers;
 
-public static class JsonSerializerOptionsHelper
+public static class JsonSerializerHelper
 {
     public static readonly JsonSerializerOptions ReadOptions = new()
     {

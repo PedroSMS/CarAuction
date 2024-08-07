@@ -2,6 +2,7 @@
 using CarAuction.Application.Common.Interfaces;
 using CarAuction.Domain.Entities;
 using FluentAssertions;
+using FluentValidation.TestHelper;
 using MockQueryable.Moq;
 using Moq;
 
@@ -9,8 +10,8 @@ namespace CarAuction.UnitTests.Application.Commands.CreateAuction;
 
 public class CreateAuctionCommandValidatorTests
 {
-    private CreateAuctionCommandValidator _sut;
-    private Mock<ICarAuctionContext> _mockDb = new Mock<ICarAuctionContext>();
+    private readonly CreateAuctionCommandValidator _sut;
+    private readonly Mock<ICarAuctionContext> _mockDb = new();
 
     public CreateAuctionCommandValidatorTests()
     {
@@ -25,11 +26,12 @@ public class CreateAuctionCommandValidatorTests
         UpdateMockDb();
 
         // Act
-        var result = await _sut.ValidateAsync(command);
+        var result = await _sut.TestValidateAsync(command);
 
         // Assert
         result.IsValid.Should().BeFalse();
-        result.Errors[0].ErrorMessage.Should().Be("Car does not exists in database.");
+        result.ShouldHaveValidationErrorFor(e => e.CarId)
+            .WithErrorMessage("Car does not exists in database.");
     }
 
     [Fact]
@@ -41,11 +43,12 @@ public class CreateAuctionCommandValidatorTests
         UpdateMockDb(carId);
 
         // Act
-        var result = await _sut.ValidateAsync(command);
+        var result = await _sut.TestValidateAsync(command);
 
         // Assert
         result.IsValid.Should().BeFalse();
-        result.Errors[0].ErrorMessage.Should().Be("Car is already in an active auction.");
+        result.ShouldHaveValidationErrorFor(e => e.CarId)
+            .WithErrorMessage("Car is already in an active auction.");
     }
 
     [Fact]

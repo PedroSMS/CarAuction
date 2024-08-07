@@ -1,4 +1,6 @@
-﻿using CarAuction.Application.Commands.CreateBid;
+﻿using Ardalis.Result.AspNetCore;
+using CarAuction.Application.Commands.CreateBid;
+using CarAuction.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,18 +11,11 @@ namespace CarAuction.API.Controllers;
 [ApiController]
 public class BidsController : ControllerBase
 {
-    // Just a placeholder for the method 'CreatedAtAction'
-    [HttpGet("{id}")]
-    public IActionResult GetById()
-    {
-        return Ok();
-    }
-
     [HttpPost]
-    public async Task<IActionResult> Bid([FromServices] IMediator mediator, [FromBody] CreateBidCommandRequest request)
+    public async Task<ActionResult<Bid>> Bid([FromServices] IMediator mediator, [FromBody] CreateBidCommandRequest request)
     {
-        var bid = await mediator.Send(request.ToCommand());
+        var result = await mediator.Send(request.ToCommand());
 
-        return CreatedAtAction(nameof(GetById), new { id = bid.Id }, bid);
+        return this.ToActionResult(result);
     }
 }

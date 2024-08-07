@@ -3,6 +3,7 @@ using CarAuction.Application.Common.Interfaces;
 using CarAuction.Domain.Entities;
 using CarAuction.Domain.Enums;
 using FluentAssertions;
+using FluentValidation.TestHelper;
 using MockQueryable.Moq;
 using Moq;
 
@@ -10,8 +11,8 @@ namespace CarAuction.UnitTests.Application.Commands.CreateCar;
 
 public class CreateCarCommandValidatorTests
 {
-    private CreateCarCommandValidator _sut;
-    private Mock<ICarAuctionContext> _mockDb = new Mock<ICarAuctionContext>();
+    private readonly CreateCarCommandValidator _sut;
+    private readonly Mock<ICarAuctionContext> _mockDb = new();
 
     public CreateCarCommandValidatorTests()
     {
@@ -27,10 +28,12 @@ public class CreateCarCommandValidatorTests
         UpdateMockDb(identifier);
 
         // Act
-        var result = await _sut.ValidateAsync(command);
+        var result = await _sut.TestValidateAsync(command);
 
         // Assert
         result.IsValid.Should().BeFalse();
+        result.ShouldHaveValidationErrorFor(e => e.Identifier)
+            .WithErrorMessage("Identifier already exists in the database.");
     }
 
     [Fact]
@@ -41,10 +44,14 @@ public class CreateCarCommandValidatorTests
         UpdateMockDb();
 
         // Act
-        var result = await _sut.ValidateAsync(command);
+        var result = await _sut.TestValidateAsync(command);
 
         // Assert
         result.IsValid.Should().BeFalse();
+        result.ShouldHaveValidationErrorFor(e => e.Year)
+            .WithErrorMessage($"'Year' must be between 1885 and {DateTime.UtcNow.Year}. You entered 1700.");
+        result.ShouldHaveValidationErrorFor(e => e.StartingBid)
+            .WithErrorMessage("'Starting Bid' must not be empty.");
     }
 
     [Fact]
@@ -55,10 +62,12 @@ public class CreateCarCommandValidatorTests
         UpdateMockDb();
 
         // Act
-        var result = await _sut.ValidateAsync(command);
+        var result = await _sut.TestValidateAsync(command);
 
         // Assert
         result.IsValid.Should().BeFalse();
+        result.ShouldHaveValidationErrorFor(e => e.LoadCapacity)
+            .WithErrorMessage("'Load Capacity' must not be empty.");
     }
 
     [Fact]

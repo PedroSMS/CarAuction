@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarAuction.Infrastructure",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarAuction.UnitTests", "tests\CarAuction.UnitTests\CarAuction.UnitTests.csproj", "{27632B4B-35B2-46DE-ADD2-83549CE46E54}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarAuction.IntegrationTests", "tests\CarAuction.IntegrationTests\CarAuction.IntegrationTests.csproj", "{F1F75711-9B7D-4326-A142-8EF6A1DEEFBB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarAuction.IntegrationTests", "tests\CarAuction.IntegrationTests\CarAuction.IntegrationTests.csproj", "{F1F75711-9B7D-4326-A142-8EF6A1DEEFBB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

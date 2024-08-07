@@ -1,25 +1,25 @@
-﻿using CarAuction.Application.Common.Interfaces;
+﻿using Ardalis.Result;
+using CarAuction.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarAuction.Application.Commands.CloseAuction;
 
-public class CloseAuctionCommandHandler(ICarAuctionContext db) : IRequestHandler<CloseAuctionCommand, Unit>
+public class CloseAuctionCommandHandler(ICarAuctionContext db) : IRequestHandler<CloseAuctionCommand, Result<Unit>>
 {
     private readonly ICarAuctionContext _db = db;
 
-    public async Task<Unit> Handle(CloseAuctionCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Unit>> Handle(CloseAuctionCommand request, CancellationToken cancellationToken)
     {
         var auction = await _db.Auction
             .FirstOrDefaultAsync(e => e.Id == request.Id, 
                 cancellationToken);
 
-        // TODO
-        ArgumentNullException.ThrowIfNull(auction, nameof(auction));
+        if (auction is null) return Result.NotFound($"Unable to find auction with id '{request.Id}'");
 
-        auction.FinishedAtUtc = DateTime.UtcNow;
+        auction!.FinishedAtUtc = DateTime.UtcNow;
         await _db.SaveChangesAsync(cancellationToken);
 
-        return Unit.Value;
+        return Result.Success(Unit.Value);
     }
 }

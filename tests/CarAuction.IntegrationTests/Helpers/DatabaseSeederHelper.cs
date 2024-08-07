@@ -43,4 +43,16 @@ public static class DatabaseSeederHelper
             .RuleFor(r => r.LoadCapacity, f => f.Random.Number(10000, 45000))
             .Generate(number);
     }
+
+    public static List<Auction> GetAuctionsForCar(int number, Guid carId)
+    {
+        return new Faker<Auction>()
+            .RuleFor(r => r.Id, f => Guid.NewGuid())
+            .RuleFor(r => r.CarId, f => carId)
+            .RuleFor(r => r.Bids, f => 
+            [
+                new() { Value = 25500, PlacedAtUtc = DateTime.UtcNow }
+            ])
+            .Generate(number);
+    }
 }

@@ -1,5 +1,7 @@
-﻿using CarAuction.Application.Commands.CloseAuction;
+﻿using Ardalis.Result.AspNetCore;
+using CarAuction.Application.Commands.CloseAuction;
 using CarAuction.Application.Commands.CreateAuction;
+using CarAuction.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,26 +11,19 @@ namespace CarAuction.API.Controllers;
 [ApiController]
 public class AuctionsController : ControllerBase
 {
-    // Just a placeholder for the method 'CreatedAtAction'
-    [HttpGet("{id}")]
-    public IActionResult GetById()
-    {
-        return Ok();
-    }
-
     [HttpPost]
-    public async Task<IActionResult> Create([FromServices] IMediator mediator, [FromBody] CreateAuctionCommandRequest request)
+    public async Task<ActionResult<Auction>> Create([FromServices] IMediator mediator, [FromBody] CreateAuctionCommandRequest request)
     {
-        var auction = await mediator.Send(request.ToCommand());
+        var result = await mediator.Send(request.ToCommand());
 
-        return CreatedAtAction(nameof(GetById), new { id = auction.Id }, auction);
+        return this.ToActionResult(result);
     }
 
     [HttpPut("{id}/close")]
-    public async Task<IActionResult> Close([FromServices] IMediator mediator, [FromRoute] Guid id)
+    public async Task<ActionResult<Unit>> Close([FromServices] IMediator mediator, [FromRoute] Guid id)
     {
-        await mediator.Send(new CloseAuctionCommand(id));
+        var result = await mediator.Send(new CloseAuctionCommand(id));
 
-        return NoContent();
+        return this.ToActionResult(result);
     }
 }

@@ -1,0 +1,13 @@
+version: '3.9'
+
+services:
+  mssql:
+    image: 'mcr.microsoft.com/mssql/server:2022-latest'
+    ports:
+      - '1433:1433'
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=SayWhat$123!!
+    volumes:
+      - ./db/data:/var/opt/mssql/data
+      - ./db/log:/var/opt/mssql/log

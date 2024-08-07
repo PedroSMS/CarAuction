@@ -1,10 +1,11 @@
-﻿using CarAuction.Domain.Entities;
+﻿using Ardalis.Result;
+using CarAuction.Domain.Entities;
 using CarAuction.Domain.Enums;
 using MediatR;
 
 namespace CarAuction.Application.Commands.CreateCar;
 
-public class CreateCarCommand(CreateCarCommandRequest request) : IRequest<Vehicle>
+public class CreateCarCommand(CreateCarCommandRequest request) : IRequest<Result<Vehicle>>
 {
     public ECarType TypeId { get; private set; } = (ECarType)request.TypeId;
     public string Identifier { get; private set; } = request.Identifier;

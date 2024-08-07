@@ -49,7 +49,7 @@ public class CarControllerTests
         // Act
         var response = await _httpClient.PostAsJsonAsync("api/cars", request);
         var insertedCar = JsonSerializer.Deserialize<Truck>(
-            await response.Content.ReadAsStreamAsync(), JsonSerializerOptionsHelper.ReadOptions);
+            await response.Content.ReadAsStreamAsync(), JsonSerializerHelper.ReadOptions);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Created);
