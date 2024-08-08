@@ -1,19 +1,17 @@
 ﻿using Ardalis.Result;
 using CarAuction.Application.Common.Interfaces;
 using CarAuction.Domain.Entities;
-using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarAuction.Application.Commands.CreateAuction;
 
 public class CreateAuctionCommandHandler(
-    IValidator<CreateAuctionCommand> validator,
     ICarAuctionContext db,
-    ICreateAuctionCommandAdapter adapter) : IRequestHandler<CreateAuctionCommand, Result<Auction>>
+    ICreateAuctionCommandAdapter adapter) 
+    : IRequestHandler<CreateAuctionCommand, Result<Auction>>
 {
     private readonly ICarAuctionContext _db = db;
-    private readonly IValidator<CreateAuctionCommand> _validator = validator;
     private readonly ICreateAuctionCommandAdapter _adapter = adapter;
 
     public async Task<Result<Auction>> Handle(CreateAuctionCommand request, CancellationToken cancellationToken)

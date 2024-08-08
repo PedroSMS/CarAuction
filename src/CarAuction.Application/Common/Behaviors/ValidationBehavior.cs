@@ -18,12 +18,7 @@ public class ValidationBehavior<TRequest, TResponse>(
         var context = new ValidationContext<TRequest>(request);
 
         var validationResults = await Task.WhenAll(
-            _validators.Select(validator => validator.ValidateAsync(context)));
-
-        var validationFailures = validationResults
-            .SelectMany(r => r.Errors)
-            .Where(f => f != null)
-            .ToList();
+            _validators.Select(validator => validator.ValidateAsync(context, cancellationToken)));
 
         var validationErrors = validationResults
             .SelectMany(r => r.AsErrors())
@@ -33,7 +28,12 @@ public class ValidationBehavior<TRequest, TResponse>(
 
         if (IsResultType(typeof(TResponse)))
             return (dynamic)Result.Invalid(validationErrors);
-            
+
+        var validationFailures = validationResults
+            .SelectMany(r => r.Errors)
+            .Where(f => f != null)
+            .ToList();
+
         throw new ValidationException(validationFailures);
     }
 

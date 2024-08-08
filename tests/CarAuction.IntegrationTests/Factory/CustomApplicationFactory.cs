@@ -1,5 +1,5 @@
 ﻿using CarAuction.API;
-using CarAuction.Infrastructure.Persistence.Context;
+using CarAuction.Infrastructure.Persistence.Contexts;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;

@@ -1,5 +1,5 @@
 ﻿using CarAuction.Application.Common.Interfaces;
-using CarAuction.Infrastructure.Persistence.Context;
+using CarAuction.Infrastructure.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,7 +12,7 @@ public static class DependencyInjection
     {
         services.AddDbContext<CarAuctionContext>(options =>
         {
-            options.UseInMemoryDatabase("InMemeoryDb");
+            options.UseInMemoryDatabase("InMemoryDb");
             //options.EnableDetailedErrors();
             //options.EnableSensitiveDataLogging();
             //options.UseSqlServer(configuration.GetConnectionString("SqlServer"),

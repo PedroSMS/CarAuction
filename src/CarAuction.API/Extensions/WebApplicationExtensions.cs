@@ -1,4 +1,4 @@
-﻿using CarAuction.Infrastructure.Persistence.Context;
+﻿using CarAuction.Infrastructure.Persistence.Contexts;
 
 namespace CarAuction.API.Extensions;
 

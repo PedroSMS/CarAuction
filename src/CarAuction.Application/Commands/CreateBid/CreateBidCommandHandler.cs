@@ -1,7 +1,6 @@
 ﻿using Ardalis.Result;
 using CarAuction.Application.Common.Interfaces;
 using CarAuction.Domain.Entities;
-using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,11 +8,10 @@ namespace CarAuction.Application.Commands.CreateBid;
 
 public class CreateBidCommandHandler(
     ICarAuctionContext db,
-    IValidator<CreateBidCommand> validator,
-    ICreateBidCommandAdapter adapter) : IRequestHandler<CreateBidCommand, Result<Bid>>
+    ICreateBidCommandAdapter adapter)
+    : IRequestHandler<CreateBidCommand, Result<Bid>>
 {
     private readonly ICarAuctionContext _db = db;
-    private readonly IValidator<CreateBidCommand> _validator = validator;
     private readonly ICreateBidCommandAdapter _adapter = adapter;
 
     public async Task<Result<Bid>> Handle(CreateBidCommand request, CancellationToken cancellationToken)

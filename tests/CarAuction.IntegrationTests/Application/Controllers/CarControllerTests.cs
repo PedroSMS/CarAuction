@@ -1,6 +1,6 @@
 ﻿using CarAuction.Application.Commands.CreateVehicle;
 using CarAuction.Application.Common.Interfaces;
-using CarAuction.Application.Queries.GetCars;
+using CarAuction.Application.Queries.GetVehicles;
 using CarAuction.Domain.Entities;
 using CarAuction.Domain.Enums;
 using CarAuction.IntegrationTests.Fixtures;

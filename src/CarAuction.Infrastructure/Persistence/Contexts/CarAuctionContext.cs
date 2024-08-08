@@ -3,7 +3,7 @@ using CarAuction.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
-namespace CarAuction.Infrastructure.Persistence.Context;
+namespace CarAuction.Infrastructure.Persistence.Contexts;
 
 public class CarAuctionContext(DbContextOptions<CarAuctionContext> options) : DbContext(options), ICarAuctionContext
 {
