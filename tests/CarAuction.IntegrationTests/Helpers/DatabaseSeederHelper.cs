@@ -13,7 +13,7 @@ public static class DatabaseSeederHelper
             .RuleFor(r => r.Model, f => f.Vehicle.Model())
             .RuleFor(r => r.Id, f => Guid.NewGuid())
             .RuleFor(r => r.Year, f => f.Random.Number(1950, 2024))
-            .RuleFor(r => r.StartingBid, f => f.Random.Number(1000, 25000))
+            .RuleFor(r => r.OpeningBid, f => f.Random.Number(1000, 25000))
             .RuleFor(r => r.NumberOfDoors, f => f.Random.Number(1, 5))
             .Generate(number);
     }
@@ -26,7 +26,7 @@ public static class DatabaseSeederHelper
             .RuleFor(r => r.Model, f => f.Vehicle.Model())
             .RuleFor(r => r.Id, f => Guid.NewGuid())
             .RuleFor(r => r.Year, f => f.Random.Number(1950, 2024))
-            .RuleFor(r => r.StartingBid, f => f.Random.Number(1000, 25000))
+            .RuleFor(r => r.OpeningBid, f => f.Random.Number(1000, 25000))
             .RuleFor(r => r.NumberOfDoors, f => f.Random.Number(1, 5))
             .Generate(number);
     }
@@ -39,16 +39,16 @@ public static class DatabaseSeederHelper
             .RuleFor(r => r.Model, f => f.Vehicle.Model())
             .RuleFor(r => r.Id, f => Guid.NewGuid())
             .RuleFor(r => r.Year, f => f.Random.Number(1950, 2024))
-            .RuleFor(r => r.StartingBid, f => f.Random.Number(1000, 25000))
+            .RuleFor(r => r.OpeningBid, f => f.Random.Number(1000, 25000))
             .RuleFor(r => r.LoadCapacity, f => f.Random.Number(10000, 45000))
             .Generate(number);
     }
 
-    public static List<Auction> GetAuctionsForCar(int number, Guid carId, bool isFinished = false)
+    public static List<Auction> GetAuctionsForVehicle(int number, Guid carId, bool isFinished = false)
     {
         return new Faker<Auction>()
             .RuleFor(r => r.Id, f => Guid.NewGuid())
-            .RuleFor(r => r.CarId, f => carId)
+            .RuleFor(r => r.VehicleId, f => carId)
             .RuleFor(r => r.FinishedAtUtc, f => isFinished ? DateTime.UtcNow : null)
             .RuleFor(r => r.Bids, f => 
             [

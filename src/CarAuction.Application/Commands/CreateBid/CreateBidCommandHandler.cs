@@ -23,10 +23,11 @@ public class CreateBidCommandHandler(
                 cancellationToken) is false;
 
         if (auctionDoesNotExistsOrItIsClosed) 
-            return Result.NotFound($"Unable to find auction with id '{request.AuctionId}' or auction is already closed");
+            return Result.NotFound($"Unable to find auction with id '{request.AuctionId}' or auction is already closed-");
 
         var bid = _adapter.GetBidFrom(request);
 
+        _db.Bid.Add(bid);
         await _db.SaveChangesAsync(cancellationToken);
 
         return bid;

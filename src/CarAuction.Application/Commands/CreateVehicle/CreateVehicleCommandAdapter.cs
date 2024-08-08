@@ -1,56 +1,56 @@
 ﻿using CarAuction.Domain.Entities;
 using CarAuction.Domain.Enums;
 
-namespace CarAuction.Application.Commands.CreateCar;
+namespace CarAuction.Application.Commands.CreateVehicle;
 
-public interface ICreateCarCommandAdapter
+public interface ICreateVehicleCommandAdapter
 {
-    Vehicle GetCarFrom(CreateCarCommand request);
+    Vehicle GetVehicleFrom(CreateVehicleCommand request);
 }
 
-public class CreateCarCommandAdapter : ICreateCarCommandAdapter
+public class CreateVehicleCommandAdapter : ICreateVehicleCommandAdapter
 {
-    public Vehicle GetCarFrom(CreateCarCommand request)
+    public Vehicle GetVehicleFrom(CreateVehicleCommand request)
     {
         return request.TypeId switch
         {
-            ECarType.Hatchback => new Hatchback
+            EVehicleType.Hatchback => new Hatchback
             {
                 Identifier = request.Identifier,
                 Manufacturer = request.Manufacturer,
                 Model = request.Model,
                 NumberOfDoors = request.NumberOfDoors!.Value,
-                StartingBid = request.StartingBid,
+                OpeningBid = request.OpeningBid,
                 Year = request.Year,
             },
-            ECarType.Sedan => new Sedan
+            EVehicleType.Sedan => new Sedan
             {
                 Identifier = request.Identifier,
                 Manufacturer = request.Manufacturer,
                 Model = request.Model,
                 NumberOfDoors = request.NumberOfDoors!.Value,
-                StartingBid = request.StartingBid,
+                OpeningBid = request.OpeningBid,
                 Year = request.Year,
             },
-            ECarType.Suv => new Suv
+            EVehicleType.Suv => new Suv
             {
                 Identifier = request.Identifier,
                 Manufacturer = request.Manufacturer,
                 Model = request.Model,
                 NumberOfSeats = request.NumberOfSeats!.Value,
-                StartingBid = request.StartingBid,
+                OpeningBid = request.OpeningBid,
                 Year = request.Year,
             },
-            ECarType.Truck => new Truck
+            EVehicleType.Truck => new Truck
             {
                 Identifier = request.Identifier,
                 Manufacturer = request.Manufacturer,
                 Model = request.Model,
                 LoadCapacity = request.LoadCapacity!.Value,
-                StartingBid = request.StartingBid,
+                OpeningBid = request.OpeningBid,
                 Year = request.Year,
             },
-            _ => throw new ArgumentOutOfRangeException(nameof(CreateCarCommandAdapter))
+            _ => throw new ArgumentOutOfRangeException(nameof(GetVehicleFrom))
         };
     }
 }

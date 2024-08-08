@@ -3,11 +3,11 @@ using CarAuction.Domain.Enums;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
-namespace CarAuction.Application.Commands.CreateCar;
+namespace CarAuction.Application.Commands.CreateVehicle;
 
-public class CreateCarCommandValidator : AbstractValidator<CreateCarCommand>
+public class CreateVehicleCommandValidator : AbstractValidator<CreateVehicleCommand>
 {
-    public CreateCarCommandValidator(ICarAuctionContext db)
+    public CreateVehicleCommandValidator(ICarAuctionContext db)
     {
         RuleFor(r => r.TypeId)
             .NotEmpty()
@@ -22,20 +22,20 @@ public class CreateCarCommandValidator : AbstractValidator<CreateCarCommand>
             .NotEmpty()
             .MustAsync(async (i, ct) => await DoNotExistInDatabaseAsync(db, i, ct))
             .WithMessage("Identifier already exists in the database.");
-        RuleFor(r => r.StartingBid)
+        RuleFor(r => r.OpeningBid)
             .NotEmpty();
         RuleFor(r => r.NumberOfDoors)
             .NotEmpty()
             .GreaterThan(0)
-            .When(r => r.TypeId == ECarType.Hatchback || r.TypeId == ECarType.Sedan);
+            .When(r => r.TypeId == EVehicleType.Hatchback || r.TypeId == EVehicleType.Sedan);
         RuleFor(r => r.NumberOfSeats)
             .NotEmpty()
             .GreaterThan(0)
-            .When(r => r.TypeId == ECarType.Suv);
+            .When(r => r.TypeId == EVehicleType.Suv);
         RuleFor(r => r.LoadCapacity)
             .NotEmpty()
             .GreaterThan(0)
-            .When(r => r.TypeId == ECarType.Truck);
+            .When(r => r.TypeId == EVehicleType.Truck);
     }
 
     #region private

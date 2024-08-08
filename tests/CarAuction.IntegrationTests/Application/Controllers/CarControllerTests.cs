@@ -1,4 +1,4 @@
-﻿using CarAuction.Application.Commands.CreateCar;
+﻿using CarAuction.Application.Commands.CreateVehicle;
 using CarAuction.Application.Common.Interfaces;
 using CarAuction.Application.Queries.GetCars;
 using CarAuction.Domain.Entities;
@@ -19,7 +19,7 @@ namespace CarAuction.IntegrationTests.Application.Controllers;
 [Collection(nameof(CustomApplicationFactoryCollection))]
 public class CarControllerTests
 {
-    private const string Endpoint = "api/cars";
+    private const string Endpoint = "api/vehicles";
     private readonly HttpClient _httpClient;
     private readonly ICarAuctionContext _db;
 
@@ -36,7 +36,7 @@ public class CarControllerTests
         await SeedDatabase();
 
         // Act
-        var result = await _httpClient.GetFromJsonAsync<List<GetCarsQueryResponse>>($"{Endpoint}?typeId=1");
+        var result = await _httpClient.GetFromJsonAsync<List<GetVehiclesQueryResponse>>($"{Endpoint}?typeId=1");
 
         // Assert
         result.Should().NotBeNullOrEmpty();
@@ -61,23 +61,23 @@ public class CarControllerTests
     }
 
     [Fact]
-    public async Task Create_ShouldCreateNewCar_WhenRequestIsValid()
+    public async Task Create_ShouldCreateNewVehicle_WhenRequestIsValid()
     {
         // Arrange
         var request = GetRequest();
 
         // Act
-        var response = await _httpClient.PostAsJsonAsync("api/cars", request);
-        var insertedCar = JsonSerializer.Deserialize<Truck>(
+        var response = await _httpClient.PostAsJsonAsync(Endpoint, request);
+        var insertedVehicle = JsonSerializer.Deserialize<Truck>(
             await response.Content.ReadAsStreamAsync(), JsonSerializerHelper.ReadOptions);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        insertedCar.Should().NotBeNull();
-        insertedCar!.Manufacturer.Should().Be(request.Manufacturer);
-        insertedCar!.Model.Should().Be(request.Model);
-        insertedCar!.StartingBid.Should().Be(request.StartingBid);
-        insertedCar.LoadCapacity.Should().Be(request.LoadCapacity);
+        insertedVehicle.Should().NotBeNull();
+        insertedVehicle!.Manufacturer.Should().Be(request.Manufacturer);
+        insertedVehicle!.Model.Should().Be(request.Model);
+        insertedVehicle!.OpeningBid.Should().Be(request.OpeningBid);
+        insertedVehicle.LoadCapacity.Should().Be(request.LoadCapacity);
     }
 
     #region private
@@ -89,7 +89,7 @@ public class CarControllerTests
         await _db.SaveChangesAsync();
     }
 
-    private CreateCarCommandRequest GetRequest()
+    private CreateVehicleCommandRequest GetRequest()
     {
         return new()
         {
@@ -97,22 +97,22 @@ public class CarControllerTests
             LoadCapacity = 15000,
             Manufacturer = "Volvo",
             Model = "FE",
-            TypeId = (int)ECarType.Truck,
+            TypeId = (int)EVehicleType.Truck,
             Year = 2000,
-            StartingBid = 25000
+            OpeningBid = 25000
         };
     }
 
-    private CreateCarCommandRequest GetInvalidRequest()
+    private CreateVehicleCommandRequest GetInvalidRequest()
     {
         return new()
         {
             Identifier = Guid.NewGuid().ToString(),
             Manufacturer = "Volvo",
             Model = "FE",
-            TypeId = (int)ECarType.Hatchback,
+            TypeId = (int)EVehicleType.Hatchback,
             Year = 2000,
-            StartingBid = 25000
+            OpeningBid = 25000
         };
     }
 

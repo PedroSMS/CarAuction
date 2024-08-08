@@ -9,5 +9,5 @@ public abstract class Vehicle : IBiddable
     public required string Manufacturer { get; set; }
     public required string Model { get; set; }
     public int Year { get; set; }
-    public decimal StartingBid { get; set; }
+    public decimal OpeningBid { get; set; }
 }

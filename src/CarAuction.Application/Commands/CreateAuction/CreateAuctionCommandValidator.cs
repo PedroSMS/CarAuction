@@ -8,7 +8,7 @@ public class CreateAuctionCommandValidator : AbstractValidator<CreateAuctionComm
 {
     public CreateAuctionCommandValidator(ICarAuctionContext db)
     {
-        RuleFor(e => e.CarId)
+        RuleFor(e => e.VehicleId)
             .NotEmpty()
             .MustAsync(async (id, ct) => await DoNotExistInActiveAuctionAsync(db, id, ct))
             .WithMessage("Car is already in an active auction.");
@@ -20,7 +20,7 @@ public class CreateAuctionCommandValidator : AbstractValidator<CreateAuctionComm
         ICarAuctionContext db, Guid id, CancellationToken cancellationToken)
     {
         return await db.Auction
-            .AnyAsync(e => e.CarId == id && !e.FinishedAtUtc.HasValue, 
+            .AnyAsync(e => e.VehicleId == id && !e.FinishedAtUtc.HasValue, 
                 cancellationToken) is false;
     }
     #endregion

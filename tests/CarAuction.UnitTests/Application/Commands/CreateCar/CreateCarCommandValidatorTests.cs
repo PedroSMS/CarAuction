@@ -1,4 +1,4 @@
-﻿using CarAuction.Application.Commands.CreateCar;
+﻿using CarAuction.Application.Commands.CreateVehicle;
 using CarAuction.Application.Common.Interfaces;
 using CarAuction.Domain.Entities;
 using CarAuction.Domain.Enums;
@@ -7,14 +7,14 @@ using FluentValidation.TestHelper;
 using MockQueryable.Moq;
 using Moq;
 
-namespace CarAuction.UnitTests.Application.Commands.CreateCar;
+namespace CarAuction.UnitTests.Application.Commands.CreateVehicle;
 
-public class CreateCarCommandValidatorTests
+public class CreateVehicleCommandValidatorTests
 {
-    private readonly CreateCarCommandValidator _sut;
+    private readonly CreateVehicleCommandValidator _sut;
     private readonly Mock<ICarAuctionContext> _mockDb = new();
 
-    public CreateCarCommandValidatorTests()
+    public CreateVehicleCommandValidatorTests()
     {
         _sut = new(_mockDb.Object);
     }
@@ -50,8 +50,8 @@ public class CreateCarCommandValidatorTests
         result.IsValid.Should().BeFalse();
         result.ShouldHaveValidationErrorFor(e => e.Year)
             .WithErrorMessage($"'Year' must be between 1885 and {DateTime.UtcNow.Year}. You entered 1700.");
-        result.ShouldHaveValidationErrorFor(e => e.StartingBid)
-            .WithErrorMessage("'Starting Bid' must not be empty.");
+        result.ShouldHaveValidationErrorFor(e => e.OpeningBid)
+            .WithErrorMessage("'Opening Bid' must not be empty.");
     }
 
     [Fact]
@@ -98,12 +98,12 @@ public class CreateCarCommandValidatorTests
             .Returns(data.AsQueryable().BuildMockDbSet().Object);
     }
 
-    private static CreateCarCommand GetCommandForIdentifierValidationError(string identifier)
+    private static CreateVehicleCommand GetCommandForIdentifierValidationError(string identifier)
     {
-        var request = new CreateCarCommandRequest
+        var request = new CreateVehicleCommandRequest
         {
-            TypeId = (int)ECarType.Hatchback,
-            StartingBid = 10000,
+            TypeId = (int)EVehicleType.Hatchback,
+            OpeningBid = 10000,
             Manufacturer = "Opel",
             Model = "Corsa",
             Year = 1990,
@@ -114,12 +114,12 @@ public class CreateCarCommandValidatorTests
         return request.ToCommand();
     }
 
-    private static CreateCarCommand GetCommandForYearAndStartBidValidationErrors()
+    private static CreateVehicleCommand GetCommandForYearAndStartBidValidationErrors()
     {
-        var request = new CreateCarCommandRequest
+        var request = new CreateVehicleCommandRequest
         {
-            TypeId = (int)ECarType.Hatchback,
-            StartingBid = 0,
+            TypeId = (int)EVehicleType.Hatchback,
+            OpeningBid = 0,
             Manufacturer = "Opel",
             Model = "Corsa",
             Year = 1700,
@@ -130,12 +130,12 @@ public class CreateCarCommandValidatorTests
         return request.ToCommand();
     }
 
-    private static CreateCarCommand GetCommandForTruckValidationError()
+    private static CreateVehicleCommand GetCommandForTruckValidationError()
     {
-        var request = new CreateCarCommandRequest
+        var request = new CreateVehicleCommandRequest
         {
-            TypeId = (int)ECarType.Truck,
-            StartingBid = 10000,
+            TypeId = (int)EVehicleType.Truck,
+            OpeningBid = 10000,
             Manufacturer = "Volvo",
             Model = "FE",
             Year = 1990,
@@ -145,12 +145,12 @@ public class CreateCarCommandValidatorTests
         return request.ToCommand();
     }
 
-    private static CreateCarCommand GetCommandForValidResult()
+    private static CreateVehicleCommand GetCommandForValidResult()
     {
-        var request = new CreateCarCommandRequest
+        var request = new CreateVehicleCommandRequest
         {
-            TypeId = (int)ECarType.Suv,
-            StartingBid = 10000,
+            TypeId = (int)EVehicleType.Suv,
+            OpeningBid = 10000,
             Manufacturer = "BMW",
             Model = "X5",
             Year = 1990,

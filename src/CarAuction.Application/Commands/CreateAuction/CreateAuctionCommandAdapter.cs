@@ -13,7 +13,7 @@ public class CreateAuctionCommandAdapter : ICreateAuctionCommandAdapter
     {
         return new Auction
         {
-            CarId = request.CarId,
+            VehicleId = request.VehicleId,
         };
     }
 }

@@ -2,10 +2,10 @@
 
 public class CreateAuctionCommandRequest
 {
-    public Guid CarId { get; set; }
+    public Guid VehicleId { get; set; }
 
     public CreateAuctionCommand ToCommand()
     {
-        return new(CarId);
+        return new(VehicleId);
     }
 }

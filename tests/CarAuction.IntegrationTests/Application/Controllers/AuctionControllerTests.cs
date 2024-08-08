@@ -33,8 +33,8 @@ public class AuctionControllerTests
     public async Task Create_ShouldReturnBadRequest_WhenVehicleIsAlreadyInAnActiveAuction()
     {
         // Arrange
-        var carId = await SeedDatabaseWithTruckInAnActiveAuction();
-        var request = GetRequest(carId);
+        var vehicleId = await SeedDatabaseWithTruckInAnActiveAuction();
+        var request = GetRequest(vehicleId);
 
         // Act
         var response = await _httpClient.PostAsJsonAsync(Endpoint, request);
@@ -68,8 +68,8 @@ public class AuctionControllerTests
     public async Task Create_ShouldCreateNewAuction_WhenRequestIsValid()
     {
         // Arrange
-        var carId = await SeedDatabaseWithTruck();
-        var request = GetRequest(carId);
+        var vehicleId = await SeedDatabaseWithTruck();
+        var request = GetRequest(vehicleId);
 
         // Act
         var response = await _httpClient.PostAsJsonAsync(Endpoint, request);
@@ -79,7 +79,7 @@ public class AuctionControllerTests
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         insertedAuction.Should().NotBeNull();
-        insertedAuction!.CarId.Should().Be(carId);
+        insertedAuction!.VehicleId.Should().Be(vehicleId);
     }
 
     [Fact]
@@ -129,7 +129,7 @@ public class AuctionControllerTests
     private async Task<Guid> SeedDatabaseWithTruckInAnActiveAuction()
     {
         var truck = DatabaseSeederHelper.GetTrucks(1).First();
-        var auction = DatabaseSeederHelper.GetAuctionsForCar(1, truck.Id).First();
+        var auction = DatabaseSeederHelper.GetAuctionsForVehicle(1, truck.Id).First();
 
         _db.Vehicle.Add(truck);
         _db.Auction.Add(auction);
@@ -142,7 +142,7 @@ public class AuctionControllerTests
     {
         return new()
         {
-            CarId = carId
+            VehicleId = carId
         };
     }
 
@@ -152,7 +152,7 @@ public class AuctionControllerTests
             .GetTrucks(1)
             .First();
         var auction = DatabaseSeederHelper
-            .GetAuctionsForCar(1, truck.Id, isFinished)
+            .GetAuctionsForVehicle(1, truck.Id, isFinished)
             .First();
         
         _db.Vehicle.Add(truck);

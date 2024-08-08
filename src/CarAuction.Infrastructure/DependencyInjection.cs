@@ -12,13 +12,14 @@ public static class DependencyInjection
     {
         services.AddDbContext<CarAuctionContext>(options =>
         {
-            options.EnableDetailedErrors();
-            options.EnableSensitiveDataLogging();
-            options.UseSqlServer(configuration.GetConnectionString("SqlServer"),
-                sqlOptions =>
-                {
-                    sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(15), null);
-                });
+            options.UseInMemoryDatabase("InMemeoryDb");
+            //options.EnableDetailedErrors();
+            //options.EnableSensitiveDataLogging();
+            //options.UseSqlServer(configuration.GetConnectionString("SqlServer"),
+            //    sqlOptions =>
+            //    {
+            //        sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(15), null);
+            //    });
         });
 
         services.AddScoped<ICarAuctionContext>(provider =>

@@ -28,17 +28,17 @@ namespace CarAuction.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CarId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime?>("FinishedAtUtc")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("VehicleId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("CarId");
+                    b.HasIndex("VehicleId");
 
-                    b.ToTable("Auction");
+                    b.ToTable("Auction", "auction");
                 });
 
             modelBuilder.Entity("CarAuction.Domain.Entities.Bid", b =>
@@ -59,9 +59,10 @@ namespace CarAuction.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuctionId");
+                    b.HasIndex("AuctionId", "Value")
+                        .IsUnique();
 
-                    b.ToTable("Bid");
+                    b.ToTable("Bid", "auction");
                 });
 
             modelBuilder.Entity("CarAuction.Domain.Entities.Vehicle", b =>
@@ -82,7 +83,7 @@ namespace CarAuction.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("StartingBid")
+                    b.Property<decimal>("OpeningBid")
                         .HasPrecision(14, 2)
                         .HasColumnType("decimal(14,2)");
 
@@ -94,7 +95,7 @@ namespace CarAuction.Infrastructure.Persistence.Migrations
                     b.HasIndex("Identifier")
                         .IsUnique();
 
-                    b.ToTable("Vehicle");
+                    b.ToTable("Vehicle", "auction");
 
                     b.UseTptMappingStrategy();
                 });
@@ -106,7 +107,7 @@ namespace CarAuction.Infrastructure.Persistence.Migrations
                     b.Property<int>("NumberOfDoors")
                         .HasColumnType("int");
 
-                    b.ToTable("HatchBack");
+                    b.ToTable("Hatchback", "auction");
                 });
 
             modelBuilder.Entity("CarAuction.Domain.Entities.Sedan", b =>
@@ -116,7 +117,7 @@ namespace CarAuction.Infrastructure.Persistence.Migrations
                     b.Property<int>("NumberOfDoors")
                         .HasColumnType("int");
 
-                    b.ToTable("Sedan");
+                    b.ToTable("Sedan", "auction");
                 });
 
             modelBuilder.Entity("CarAuction.Domain.Entities.Suv", b =>
@@ -126,7 +127,7 @@ namespace CarAuction.Infrastructure.Persistence.Migrations
                     b.Property<int>("NumberOfSeats")
                         .HasColumnType("int");
 
-                    b.ToTable("Suv");
+                    b.ToTable("Suv", "auction");
                 });
 
             modelBuilder.Entity("CarAuction.Domain.Entities.Truck", b =>
@@ -136,18 +137,18 @@ namespace CarAuction.Infrastructure.Persistence.Migrations
                     b.Property<int>("LoadCapacity")
                         .HasColumnType("int");
 
-                    b.ToTable("Truck");
+                    b.ToTable("Truck", "auction");
                 });
 
             modelBuilder.Entity("CarAuction.Domain.Entities.Auction", b =>
                 {
-                    b.HasOne("CarAuction.Domain.Entities.Vehicle", "Car")
+                    b.HasOne("CarAuction.Domain.Entities.Vehicle", "Vehicle")
                         .WithMany()
-                        .HasForeignKey("CarId")
+                        .HasForeignKey("VehicleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Car");
+                    b.Navigation("Vehicle");
                 });
 
             modelBuilder.Entity("CarAuction.Domain.Entities.Bid", b =>

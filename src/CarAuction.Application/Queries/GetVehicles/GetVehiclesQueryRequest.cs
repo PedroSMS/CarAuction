@@ -1,6 +1,6 @@
-﻿namespace CarAuction.Application.Queries.GetCars;
+﻿namespace CarAuction.Application.Queries.GetVehicles;
 
-public record GetCarsQueryRequest
+public record GetVehiclesQueryRequest
 {
     public string? Manufacturer { get; init; }
     public string? Model { get; init; }

@@ -2,7 +2,7 @@
 
 public class Bid
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
     public required decimal Value { get; set; }
     public DateTime PlacedAtUtc { get; set; }
 

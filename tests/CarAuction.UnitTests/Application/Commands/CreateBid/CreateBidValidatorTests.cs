@@ -53,7 +53,7 @@ public class CreateBidValidatorTests
     #region private
     private void UpdateMockDb(Guid auctionId)
     {
-        var cars = new List<Vehicle>
+        var vehicles = new List<Vehicle>
         {
             new Sedan
             {
@@ -61,20 +61,20 @@ public class CreateBidValidatorTests
                 Identifier = Guid.NewGuid().ToString(),
                 Manufacturer = "Audi",
                 Model = "A4",
-                StartingBid = 1000
+                OpeningBid = 1000
             }
         };
 
         _mockDb.Setup(e => e.Vehicle)
-            .Returns(cars.AsQueryable().BuildMockDbSet().Object);
+            .Returns(vehicles.AsQueryable().BuildMockDbSet().Object);
 
         var auctions = new List<Auction>
         {
             new()
             {
                 Id = auctionId,
-                CarId = cars[0].Id,
-                Car = cars[0],
+                VehicleId = vehicles[0].Id,
+                Vehicle = vehicles[0],
                 Bids =
                 [
                     new() { AuctionId = auctionId, Value = 1500 }

@@ -68,7 +68,7 @@ public class BidControllerTests
     private async Task<Guid> SeedDatabaseWithAuction()
     {
         var truck = DatabaseSeederHelper.GetTrucks(1).First();
-        var auction = DatabaseSeederHelper.GetAuctionsForCar(1, truck.Id).First();
+        var auction = DatabaseSeederHelper.GetAuctionsForVehicle(1, truck.Id).First();
 
         _db.Vehicle.Add(truck);
         _db.Auction.Add(auction);

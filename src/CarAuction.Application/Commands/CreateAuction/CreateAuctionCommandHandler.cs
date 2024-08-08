@@ -19,10 +19,10 @@ public class CreateAuctionCommandHandler(
     public async Task<Result<Auction>> Handle(CreateAuctionCommand request, CancellationToken cancellationToken)
     {
         var vehicleDoesNotExists = await _db.Vehicle
-            .AnyAsync(e => e.Id == request.CarId, 
+            .AnyAsync(e => e.Id == request.VehicleId, 
                 cancellationToken) is false;
 
-        if (vehicleDoesNotExists) return Result.NotFound($"Unable to find vehicle with id '{request.CarId}'");
+        if (vehicleDoesNotExists) return Result.NotFound($"Unable to find vehicle with id '{request.VehicleId}'");
 
         var auction = _adapter.GetAuctionFrom(request);
 

@@ -2,5 +2,5 @@
 
 public interface IBiddable
 {
-    decimal StartingBid { get; set; }
+    decimal OpeningBid { get; set; }
 }

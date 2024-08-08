@@ -31,7 +31,7 @@ public class CreateAuctionCommandValidatorTests
 
         // Assert
         result.IsValid.Should().BeFalse();
-        result.ShouldHaveValidationErrorFor(e => e.CarId)
+        result.ShouldHaveValidationErrorFor(e => e.VehicleId)
             .WithErrorMessage("Car is already in an active auction.");
     }
 
@@ -71,7 +71,7 @@ public class CreateAuctionCommandValidatorTests
         {
             new() 
             {
-                CarId = auctionCarId ?? cars[0].Id,
+                VehicleId = auctionCarId ?? cars[0].Id,
                 Id = Guid.NewGuid()
             }
         };
@@ -80,11 +80,11 @@ public class CreateAuctionCommandValidatorTests
             .Returns(auctions.AsQueryable().BuildMockDbSet().Object);
     }
 
-    private static CreateAuctionCommand GetCommand(Guid carId)
+    private static CreateAuctionCommand GetCommand(Guid vehicleId)
     {
         var request = new CreateAuctionCommandRequest
         {
-            CarId = carId,
+            VehicleId = vehicleId,
         };
 
         return request.ToCommand();

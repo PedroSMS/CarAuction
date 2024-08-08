@@ -1,6 +1,6 @@
 ﻿namespace CarAuction.Domain.Enums;
 
-public enum ECarType
+public enum EVehicleType
 {
     Hatchback = 1,
     Sedan,
