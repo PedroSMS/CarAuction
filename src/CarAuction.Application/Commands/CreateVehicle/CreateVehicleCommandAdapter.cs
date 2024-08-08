@@ -50,7 +50,7 @@ public class CreateVehicleCommandAdapter : ICreateVehicleCommandAdapter
                 OpeningBid = request.OpeningBid,
                 Year = request.Year,
             },
-            _ => throw new ArgumentOutOfRangeException(nameof(GetVehicleFrom))
+            _ => throw new ArgumentOutOfRangeException(nameof(request.TypeId))
         };
     }
 }
