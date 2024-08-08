@@ -10,13 +10,13 @@ public class CreateAuctionCommandValidator : AbstractValidator<CreateAuctionComm
     {
         RuleFor(e => e.VehicleId)
             .NotEmpty()
-            .MustAsync(async (id, ct) => await DoNotExistInActiveAuctionAsync(db, id, ct))
-            .WithMessage("Car is already in an active auction.");
+            .MustAsync(async (id, ct) => await DoesNotExistsInActiveAuctionAsync(db, id, ct))
+            .WithMessage("Vehicle is already in an active auction.");
     }
 
     #region private
 
-    private static async Task<bool> DoNotExistInActiveAuctionAsync(
+    private static async Task<bool> DoesNotExistsInActiveAuctionAsync(
         ICarAuctionContext db, Guid id, CancellationToken cancellationToken)
     {
         return await db.Auction
