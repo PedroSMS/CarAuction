@@ -22,9 +22,9 @@ public class CreateAuctionCommandValidatorTests
     public async Task ValidateAsync_ShouldReturnInvalidResult_WhenCarIsAlreadyInAnActiveAuction()
     {
         // Arrange
-        var carId = Guid.NewGuid();
-        var command = GetCommand(carId);
-        UpdateMockDb(carId);
+        var vehicleId = Guid.NewGuid();
+        var command = GetCommand(vehicleId);
+        UpdateMockDb(vehicleId);
 
         // Act
         var result = await _sut.TestValidateAsync(command);
@@ -32,16 +32,16 @@ public class CreateAuctionCommandValidatorTests
         // Assert
         result.IsValid.Should().BeFalse();
         result.ShouldHaveValidationErrorFor(e => e.VehicleId)
-            .WithErrorMessage("Car is already in an active auction.");
+            .WithErrorMessage("Vehicle is already in an active auction.");
     }
 
     [Fact]
     public async Task ValidateAsync_ShouldReturnValidResult_WhenCarIsInDatabaseAndDoNotExistsInAnActiveAuction()
     {
         // Arrange
-        var carId = Guid.NewGuid();
-        var command = GetCommand(carId);
-        UpdateMockDb(carId, Guid.NewGuid());
+        var vehicleId = Guid.NewGuid();
+        var command = GetCommand(vehicleId);
+        UpdateMockDb(vehicleId, Guid.NewGuid());
 
         // Act
         var result = await _sut.ValidateAsync(command);
@@ -51,13 +51,13 @@ public class CreateAuctionCommandValidatorTests
     }
 
     #region private
-    private void UpdateMockDb(Guid? carId = null, Guid? auctionCarId = null)
+    private void UpdateMockDb(Guid? vehicleId = null, Guid? auctionCarId = null)
     {
-        var cars = new List<Vehicle>
+        var vehicles = new List<Vehicle>
         {
             new Sedan 
             { 
-                Id = carId ?? Guid.NewGuid(), 
+                Id = vehicleId ?? Guid.NewGuid(), 
                 Identifier = Guid.NewGuid().ToString(), 
                 Manufacturer = "Audi", 
                 Model = "A4"
@@ -65,13 +65,13 @@ public class CreateAuctionCommandValidatorTests
         };
 
         _mockDb.Setup(e => e.Vehicle)
-            .Returns(cars.AsQueryable().BuildMockDbSet().Object);
+            .Returns(vehicles.AsQueryable().BuildMockDbSet().Object);
 
         var auctions = new List<Auction>
         {
             new() 
             {
-                VehicleId = auctionCarId ?? cars[0].Id,
+                VehicleId = auctionCarId ?? vehicles[0].Id,
                 Id = Guid.NewGuid()
             }
         };
